@@ -16,10 +16,12 @@ namespace School
             int peopleInLine;
             int hours;
             int minutes;
+            int minutesPerPeople = 10;
+            int minutesPerHour = 60;
             Console.Write("Hello, how many people in line? :");
             peopleInLine = Convert.ToInt32(Console.ReadLine());
-            minutes = (peopleInLine * 10) % 60;
-            hours = (peopleInLine * 10) / 60;
+            minutes = (peopleInLine * minutesPerPeople) % minutesPerHour;
+            hours = (peopleInLine * minutesPerPeople) / minutesPerHour;
             Console.WriteLine($"You have to wait {hours}hrs and {minutes}min.");
             }   
         }
