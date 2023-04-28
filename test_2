@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string name;
+            string surname;
+            int age;
+            string placeOfWork;
+            string zodiacSign;
+
+            Console.Write("Hello, what is your name? :");
+            name = Console.ReadLine();
+            Console.Write("What is your surname? :");
+            surname = Console.ReadLine();
+            Console.Write("How old are you? :");
+            age = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Where do you work? :");
+            placeOfWork = Console.ReadLine();
+            Console.Write("What is your zodiac sign? :");
+            zodiacSign = Console.ReadLine();
+            Console.WriteLine("Your name is " + name + ", you are " + age + " years old, your zodiac sign is " + zodiacSign + ", you work at " + placeOfWork);
+            }   
+        }
+    }
+         
