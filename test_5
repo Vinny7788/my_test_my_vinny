@@ -1,0 +1,32 @@
+using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int playerGold;
+            int crystalPrice = 10 ;
+            int playerOrder;
+            bool enoughGold;
+            Console.WriteLine($"Today you can buy crystal for price {crystalPrice} !!!");
+            Console.Write("How much gold do you have? :");
+            playerGold = Convert.ToInt32(Console.ReadLine());
+            Console.Write("How many crystals do you want to buy? :");
+            playerOrder = Convert.ToInt32(Console.ReadLine()); 
+            enoughGold = playerGold >= playerOrder * crystalPrice; 
+            playerOrder *= Convert.ToInt32(enoughGold);  
+            playerGold -= playerOrder * crystalPrice; 
+            Console.WriteLine($"You bought {playerOrder} crystals, and you have {playerGold}. ");
+             }   
+        }
+    }
+        
