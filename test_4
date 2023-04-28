@@ -1,0 +1,26 @@
+using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string surname = "Alex";
+            string name = "Alekseev";
+            string correctionOfValue;
+            correctionOfValue = name;
+            name = surname;
+            surname = correctionOfValue;
+            Console.WriteLine(name + ' ' + surname);
+        }   
+        }
+    }
+      
