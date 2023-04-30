@@ -1,11 +1,8 @@
+using Microsoft.Win32;
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace School
 {
@@ -13,14 +10,18 @@ namespace School
     {
         static void Main(string[] args)
         {
-            string surname = "Alex";
-            string name = "Alekseev";
-            string correctionOfValue;
-            correctionOfValue = name;
-            name = surname;
-            surname = correctionOfValue;
-            Console.WriteLine(name + ' ' + surname);
-        }   
+            bool notMultiple;
+            Random rand = new Random();
+            int sumOfNumbers = 0;
+            int rundomNumber = new Random().Next(1, 101);
+            for (int i = 0; i < rundomNumber; i++)
+            {
+                notMultiple = Convert.ToBoolean(i % 3) || Convert.ToBoolean(i % 5);
+                if (notMultiple == false)
+                { sumOfNumbers += i; }
+            }
+                Console.WriteLine(sumOfNumbers += rundomNumber);
         }
+
     }
-      
+}
