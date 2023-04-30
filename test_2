@@ -14,8 +14,8 @@ namespace School
             bool chekExit = true;
             while(chekExit == true)
             {
-                Console.Write("Write the message ");
-                userInput = (Console.ReadLine());
+               Console.Write("Write the message ");
+               userInput = (Console.ReadLine());
                if(userInput == "exit" || userInput == "Exit") 
                 {
                     chekExit = false;
