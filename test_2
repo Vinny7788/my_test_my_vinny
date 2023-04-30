@@ -1,8 +1,4 @@
-using Microsoft.Win32;
 using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Runtime.InteropServices;
 
 namespace School
 {
@@ -11,17 +7,18 @@ namespace School
         static void Main(string[] args)
         {
             string userInput;
-            bool chekExit = true;
-            while (chekExit == true) {
-                Console.Write("Write the message ");
-                userInput = (Console.ReadLine());
-                if (userInput == "exit" || userInput == "Exit"){ 
-                 chekExit = false;}
-                else{ 
-                 Console.WriteLine(userInput); }
-                }
-            }
+            bool userCantLeave = true;
+            string exitSmalLatter = "exit", exitCapitalLetter = "Exit";
 
+            while (userCantLeave)
+            {
+                Console.Write("Write the message: ");
+                userInput = (Console.ReadLine());
+                if (userInput == exitSmalLatter || userInput == exitCapitalLetter)
+                { userCantLeave = false; }
+                else
+                { Console.WriteLine(userInput); }
+            }
         }
     }
-
+}
