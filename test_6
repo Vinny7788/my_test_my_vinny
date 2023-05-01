@@ -1,11 +1,4 @@
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace School
 {
@@ -13,16 +6,32 @@ namespace School
     {
         static void Main(string[] args)
         {
-            int peopleInLine;
-            int hours;
-            int minutes;
-            int minutesPerPeople = 10;
-            int minutesPerHour = 60;
-            Console.Write("Hello, how many people in line? :");
-            peopleInLine = Convert.ToInt32(Console.ReadLine());
-            minutes = (peopleInLine * minutesPerPeople) % minutesPerHour;
-            hours = (peopleInLine * minutesPerPeople) / minutesPerHour;
-            Console.WriteLine($"You have to wait {hours}hrs and {minutes}min.");
-            }   
+            int minLenght = 0;
+            string userWord;
+            string userSymbol;
+            string userSymbolGroup = "";
+            Console.Write("Write the word: ");
+            userWord = Console.ReadLine();
+            int userWordLenght = userWord.Length;
+            Console.Write("Write a symbol: ");
+            userSymbol = Console.ReadLine();
+            
+            for (int i = minLenght; i < userWordLenght; i++)
+            {
+                userSymbolGroup += userSymbol;
+            }
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Clear();
+            Console.CursorVisible = false;
+            Console.CursorLeft = 45;
+            Console.CursorTop = 13;
+            Console.WriteLine(userSymbol+ userSymbolGroup + userSymbol);
+            Console.CursorLeft = 45;
+            Console.WriteLine(userSymbol+ userWord + userSymbol);
+            Console.CursorLeft = 45;
+            Console.WriteLine(userSymbol+ userSymbolGroup + userSymbol);
+            Console.ReadKey();
         }
     }
+}
