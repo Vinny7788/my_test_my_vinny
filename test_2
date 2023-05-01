@@ -7,17 +7,22 @@ namespace School
         static void Main(string[] args)
         {
             string userInput;
-            bool userCantLeave = true;
-            string exitSmalLatter = "exit", exitCapitalLetter = "Exit";
+            bool isWork = true;
+            string exitSmalLatter = "exit";
+            string exitCapitalLetter = "Exit";
 
-            while (userCantLeave)
+            while (isWork)
             {
                 Console.Write("Write the message: ");
                 userInput = (Console.ReadLine());
                 if (userInput == exitSmalLatter || userInput == exitCapitalLetter)
-                { userCantLeave = false; }
+                { 
+                    isWork = false;
+                }
                 else
-                { Console.WriteLine(userInput); }
+                { 
+                    Console.WriteLine(userInput); 
+                }
             }
         }
     }
