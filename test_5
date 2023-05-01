@@ -1,11 +1,4 @@
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace School
 {
@@ -13,20 +6,165 @@ namespace School
     {
         static void Main(string[] args)
         {
-            int playerGold;
-            int crystalPrice = 10 ;
-            int playerOrder;
-            bool enoughGold;
-            Console.WriteLine($"Today you can buy crystal for price {crystalPrice} !!!");
-            Console.Write("How much gold do you have? :");
-            playerGold = Convert.ToInt32(Console.ReadLine());
-            Console.Write("How many crystals do you want to buy? :");
-            playerOrder = Convert.ToInt32(Console.ReadLine()); 
-            enoughGold = playerGold >= playerOrder * crystalPrice; 
-            playerOrder *= Convert.ToInt32(enoughGold);  
-            playerGold -= playerOrder * crystalPrice; 
-            Console.WriteLine($"You bought {playerOrder} crystals, and you have {playerGold}. ");
-             }   
+            float userBalanceRub;
+            float userBalanceUsd;
+            float userBalanceEur;
+            float courseUsdToRub = 80.13f;
+            float courseUsdToEur = 0.91f;
+            float courseEurToRub = 88.22f;
+            float changeValue;
+            bool isWorking = true;
+            string usserInputAnswer;
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Clear();
+            Console.WriteLine("Hello, please enter your balance: ");
+            Console.Write("Ruble :");
+            userBalanceRub = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Euro :");
+            userBalanceEur = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Dolar :");
+            userBalanceUsd = Convert.ToSingle(Console.ReadLine());
+
+            while (isWorking)
+            {
+                Console.WriteLine("If you want to change Rubles into Dollars, pres - 1");
+                Console.WriteLine("If you want to change Rubles into Euro, pres - 2");
+                Console.WriteLine("If you want to change Euro into Dollars, pres - 3");
+                Console.WriteLine("If you want to change Euro into Rubles, pres - 4");
+                Console.WriteLine("If you want to change Dollars into Euro, pres - 5");
+                Console.WriteLine("If you want to change Dollars into Rubles, pres - 6");
+                Console.WriteLine("If you want exit , pres - 0 ");
+                usserInputAnswer = Console.ReadLine();
+                switch (usserInputAnswer)
+                {
+                    case "1"://rub to usd
+                        Console.Clear();
+                        Console.WriteLine("RUB/USD");
+                        Console.Write("What amount do you want to exchange?: ");
+                        changeValue = Convert.ToSingle(Console.ReadLine());
+                        if (changeValue <= userBalanceRub)
+                        {
+                            userBalanceRub -= changeValue;
+                            userBalanceUsd += changeValue / courseUsdToRub;
+                            Console.WriteLine($"You have change {changeValue} rub, your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
+                            Console.WriteLine("Press eny key to continue:");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The amount is incorrect");
+                            Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars.");
+                        }
+                        break;
+                    case "2"://rub to eur
+                        Console.Clear();
+                        Console.WriteLine("RUB/EUR");
+                        Console.Write("What amount do you want to exchange?: ");
+                        changeValue = Convert.ToSingle(Console.ReadLine());
+                        if (changeValue <= userBalanceRub)
+                        {
+                            userBalanceRub -= changeValue;
+                            userBalanceEur += changeValue / courseEurToRub;
+                            Console.WriteLine($"You have change {changeValue} rub, your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
+                            Console.WriteLine("Press eny key to continue:");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The amount is incorrect");
+                            Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars.");
+                        }
+                        break;
+                    case "3"://eur to usd
+                        Console.Clear();
+                        Console.WriteLine("EUR/USD");
+                        Console.Write("What amount do you want to exchange?: ");
+                        changeValue = Convert.ToSingle(Console.ReadLine());
+                        if (changeValue <= userBalanceEur)
+                        {
+                            userBalanceEur -= changeValue;
+                            userBalanceUsd += changeValue / courseUsdToEur;
+                            Console.WriteLine($"You have change {changeValue} eur , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
+                            Console.WriteLine("Press eny key to continue:");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The amount is incorrect");
+                            Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars.");
+                        }
+                        break;
+                    case "4"://eur to rub
+                        Console.Clear();
+                        Console.WriteLine("EUR/RUB");
+                        Console.Write("What amount do you want to exchange?: ");
+                        changeValue = Convert.ToSingle(Console.ReadLine());
+                        if (changeValue <= userBalanceEur)
+                        {
+                            userBalanceEur -= changeValue;
+                            userBalanceRub += changeValue * courseEurToRub;
+                            Console.WriteLine($"You have change {changeValue} eur , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
+                            Console.WriteLine("Press eny key to continue:");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The amount is incorrect");
+                            Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars.");
+                        }
+                        break;
+                    case "5"://usd to eur
+                        Console.Clear();
+                        Console.WriteLine("USD/EUR");
+                        Console.Write("What amount do you want to exchange?: ");
+                        changeValue = Convert.ToSingle(Console.ReadLine());
+                        if (changeValue <= userBalanceUsd)
+                        {
+                            userBalanceUsd -= changeValue;
+                            userBalanceEur += changeValue / courseUsdToEur;
+                            Console.WriteLine($"You have change {changeValue} dollars , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
+                            Console.WriteLine("Press eny key to continue:");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The amount is incorrect");
+                            Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars.");
+                        }
+                        break;
+                    case "6": //usd to rub
+                        Console.Clear();
+                        Console.WriteLine("USD/RUB");
+                        Console.Write("What amount do you want to exchange?: ");
+                        changeValue = Convert.ToSingle(Console.ReadLine());
+                        if (changeValue <= userBalanceUsd)
+                        {
+                            userBalanceUsd -= changeValue;
+                            userBalanceRub += changeValue * courseUsdToRub;
+                            Console.WriteLine($"You have change {changeValue} dollars , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
+                            Console.WriteLine("Press eny key to continue:");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The amount is incorrect");
+                            Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars.");
+                        }
+                        break;
+                    case "0":
+                        Console.Clear();
+                        Console.WriteLine("Have a good day! Good bye.");
+                        isWorking = false;
+                        break;
+                }
+            }
         }
     }
-        
+}
