@@ -1,8 +1,4 @@
-using Microsoft.Win32;
 using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Runtime.InteropServices;
 
 namespace School
 {
@@ -10,18 +6,24 @@ namespace School
     {
         static void Main(string[] args)
         {
-            bool notMultiple;
-            Random rand = new Random();
-            int sumOfNumbers = 0;
-            int rundomNumber = new Random().Next(1, 101);
+            bool isNotDivisible;
+            int sumNumbers = 0;
+            int minValue = 1;
+            int maxValue = 101;
+            int divisor1 = 3;
+            int divisor2 = 5;
+            int rundomNumber = new Random().Next(minValue, maxValue);
+
             for (int i = 0; i < rundomNumber; i++)
             {
-                notMultiple = Convert.ToBoolean(i % 3) || Convert.ToBoolean(i % 5);
-                if (notMultiple == false)
-                { sumOfNumbers += i; }
+                isNotDivisible = Convert.ToBoolean(i % divisor1) || Convert.ToBoolean(i % divisor2);
+                if (isNotDivisible == false)
+                {
+                    sumNumbers += i;
+                }
             }
-                Console.WriteLine(sumOfNumbers += rundomNumber);
+            int result = sumNumbers + rundomNumber;
+            Console.WriteLine(result);
         }
-
     }
 }
