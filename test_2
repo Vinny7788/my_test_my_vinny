@@ -15,6 +15,7 @@ namespace School
             {
                 Console.Write("Write the message: ");
                 userInput = (Console.ReadLine());
+                
                 if (userInput == exitSmalLatter || userInput == exitCapitalLetter)
                 { 
                     isWork = false;
