@@ -1,0 +1,117 @@
+using System;
+using System.ComponentModel;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string CommandExit = "exit";
+            const string CommandChangeColor = "changeColor";
+            const string CommandDelete = "delete";
+            const string CommandLogIn = "logIn";
+            const string CommandCreate = "create";
+            const string CommandAddInformation = "addInformation";
+            const string CommandClear = "clear";
+
+            string redColour = "red";
+            string greenColour = "green";
+            string blueColour = "blue";
+            string information = "";
+            string userInput;
+            string userNameInput;
+            string userName = "test";
+            int password = 123;
+            int passwordInput;
+            bool isWork = true;
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Clear();
+
+            while (isWork)
+            {
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case CommandCreate:
+                        Console.Write("new password: ");
+                        password = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("user name: ");
+                        userName = Console.ReadLine();
+                        break;
+
+                    case CommandLogIn:
+                        Console.Write("user name: ");
+                        userNameInput = Console.ReadLine();
+                        Console.Write("password: ");
+                        passwordInput = Convert.ToInt32(Console.ReadLine());
+
+                        if (password == passwordInput &&  userName == userNameInput)
+                        {
+                            Console.WriteLine("seccesses");
+                            Console.WriteLine("//" + information + "//");
+                        }
+                        break;
+
+                    case CommandDelete:
+                        Console.WriteLine("Password: ");
+                        passwordInput = Convert.ToInt32(Console.ReadLine());
+
+                        if(password == passwordInput)
+                        {
+                            Console.WriteLine("all information delete");
+                            Console.WriteLine("seccessfully");
+                            information = "";
+                            password = 123;
+                            userName = "test";
+                            Console.WriteLine($"userName: {userName}\npassword: {password}");
+                        } 
+                        break;
+
+                    case CommandAddInformation:
+                        Console.WriteLine("Password: ");
+                        passwordInput = Convert.ToInt32(Console.ReadLine());
+
+                        if (password == passwordInput)
+                        {
+                            Console.WriteLine("seccesses");
+                            Console.WriteLine("writhe information: ");
+                            information = Console.ReadLine();
+                        }
+                         break;
+
+                    case CommandClear:
+                        Console.Clear();
+                        break;
+
+                    case CommandChangeColor:
+                        Console.WriteLine("writhe the color");
+                        userInput = Console.ReadLine();
+                        
+                        if (userInput == redColour)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.Clear();
+                        }
+                        if (userInput == blueColour)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.Clear();
+                        }
+                        if (userInput == greenColour)
+                        {        
+                            Console.BackgroundColor = ConsoleColor.Green;
+                            Console.Clear();
+                        }
+                        break;
+
+                    case CommandExit:
+                        isWork = false;
+                        break;
+                }
+            }
+        }
+    }
+}
