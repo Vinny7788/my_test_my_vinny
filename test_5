@@ -40,6 +40,8 @@ namespace School
 
             while (isWorking)
             {
+                Console.Clear();
+                Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
                 Console.WriteLine("If you want to change Rubles into Dollars, press - 1");
                 Console.WriteLine("If you want to change Rubles into Euro, press - 2");
                 Console.WriteLine("If you want to change Euro into Dollars, press - 3");
@@ -60,11 +62,7 @@ namespace School
                         if (changeValue <= userBalanceRub)
                         {
                             userBalanceRub -= changeValue;
-                            userBalanceUsd += changeValue * courseRubToUsd;
-                            Console.WriteLine($"You have change {changeValue} rub, your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
-                            Console.WriteLine("Press eny key to continue:");
-                            Console.ReadKey();
-                            Console.Clear();
+                            userBalanceUsd += changeValue * courseRubToUsd;  
                         }
                         else
                         {
@@ -83,10 +81,6 @@ namespace School
                         {
                             userBalanceRub -= changeValue;
                             userBalanceEur += changeValue * courseRubToEur;
-                            Console.WriteLine($"You have change {changeValue} rub, your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
-                            Console.WriteLine("Press eny key to continue:");
-                            Console.ReadKey();
-                            Console.Clear();
                         }
                         else
                         {
@@ -105,10 +99,6 @@ namespace School
                         {
                             userBalanceEur -= changeValue;
                             userBalanceUsd += changeValue * courseEurToUsd;
-                            Console.WriteLine($"You have change {changeValue} eur , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
-                            Console.WriteLine("Press eny key to continue:");
-                            Console.ReadKey();
-                            Console.Clear();
                         }
                         else
                         {
@@ -127,10 +117,6 @@ namespace School
                         {
                             userBalanceEur -= changeValue;
                             userBalanceRub += changeValue * courseEurToRub;
-                            Console.WriteLine($"You have change {changeValue} eur , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
-                            Console.WriteLine("Press eny key to continue:");
-                            Console.ReadKey();
-                            Console.Clear();
                         }
                         else
                         {
@@ -149,10 +135,6 @@ namespace School
                         {
                             userBalanceUsd -= changeValue;
                             userBalanceEur += changeValue * courseUsdToEur;
-                            Console.WriteLine($"You have change {changeValue} dollars , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
-                            Console.WriteLine("Press eny key to continue:");
-                            Console.ReadKey();
-                            Console.Clear();
                         }
                         else
                         {
@@ -171,10 +153,6 @@ namespace School
                         {
                             userBalanceUsd -= changeValue;
                             userBalanceRub += changeValue * courseUsdToRub;
-                            Console.WriteLine($"You have change {changeValue} dollars , your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
-                            Console.WriteLine("Press eny key to continue:");
-                            Console.ReadKey();
-                            Console.Clear();
                         }
                         else
                         {
@@ -189,10 +167,9 @@ namespace School
                         isWorking = false;
                         break;
                 }
-
+            
             }
         }
     }
 }
-
 
