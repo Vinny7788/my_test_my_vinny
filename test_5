@@ -42,13 +42,13 @@ namespace School
             {
                 Console.Clear();
                 Console.WriteLine($"Your balance {userBalanceEur} eur, {userBalanceRub} rub, {userBalanceUsd} dollars. ");
-                Console.WriteLine("If you want to change Rubles into Dollars, press - 1");
-                Console.WriteLine("If you want to change Rubles into Euro, press - 2");
-                Console.WriteLine("If you want to change Euro into Dollars, press - 3");
-                Console.WriteLine("If you want to change Euro into Rubles, press - 4");
-                Console.WriteLine("If you want to change Dollars into Euro, press - 5");
-                Console.WriteLine("If you want to change Dollars into Rubles, press - 6");
-                Console.WriteLine("If you want exit , press - 0 ");
+                Console.WriteLine($"If you want to change Rubles into Dollars, press - {CommandRubToUsd}");
+                Console.WriteLine($"If you want to change Rubles into Euro, press - {CommandRubToEur}");
+                Console.WriteLine($"If you want to change Euro into Dollars, press - {CommandEurToUsd}");
+                Console.WriteLine($"If you want to change Euro into Rubles, press - {CommandEurToRub}");
+                Console.WriteLine($"If you want to change Dollars into Euro, press - {CommandUsdToEur}");
+                Console.WriteLine($"If you want to change Dollars into Rubles, press - {CommandUsdToRub}");
+                Console.WriteLine($"If you want exit , press - {CommandExit} ");
                 usserInputAnswer = Console.ReadLine();
 
                 switch (usserInputAnswer)
@@ -62,7 +62,7 @@ namespace School
                         if (changeValue <= userBalanceRub)
                         {
                             userBalanceRub -= changeValue;
-                            userBalanceUsd += changeValue * courseRubToUsd;  
+                            userBalanceUsd += changeValue * courseRubToUsd;
                         }
                         else
                         {
@@ -143,7 +143,7 @@ namespace School
                         }
                         break;
 
-                    case CommandUsdToRub: 
+                    case CommandUsdToRub:
                         Console.Clear();
                         Console.WriteLine("USD/RUB");
                         Console.Write("What amount do you want to exchange?: ");
@@ -167,9 +167,9 @@ namespace School
                         isWorking = false;
                         break;
                 }
-            
             }
         }
     }
 }
+
 
