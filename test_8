@@ -1,0 +1,40 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string password = "vv111";
+            int attemptCounter = 3;
+            int nummberOfAttempts = 3;
+            string userInputPassword;
+            string secretInformation = "Super secret";
+            Console.WriteLine($"You have {nummberOfAttempts} attemps ");
+
+            for (int i = 0 ; i < nummberOfAttempts; i++)
+            {
+                attemptCounter--;
+                Console.Write("Write the password: ");
+                userInputPassword = Console.ReadLine();
+
+                if(userInputPassword != password && i < nummberOfAttempts)
+                {
+                    Console.WriteLine($"\n{attemptCounter} attemps left ");
+                }
+
+                if (userInputPassword == password)
+                {
+                    Console.WriteLine("\n" + secretInformation);
+                    break;
+                }
+
+                if (attemptCounter == 0)
+                {
+                    Console.WriteLine("\nAttemps ended!!!");
+                }
+            }    
+        }
+    }
+}
