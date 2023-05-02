@@ -1,0 +1,30 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int minNumber = 2;
+            int maxNumber = 1000;
+            int maxNumberToCheck = 1000000;
+            int randomNumber = new Random().Next(minNumber,maxNumber);
+            int firstNumber = 2;
+            int exponent = 0;
+            int numberToThePowerOf = 0;
+
+            for(int i = minNumber; i < maxNumberToCheck; i *= 2)
+            { 
+                exponent++;
+
+                if (i > randomNumber)
+                {
+                    numberToThePowerOf = i;
+                    break;
+                } 
+            }
+            Console.WriteLine($"For the number {randomNumber}, the minimum power of {firstNumber} is {exponent} = {numberToThePowerOf} ");
+        }
+    }
+}
