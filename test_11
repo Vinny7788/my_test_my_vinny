@@ -1,0 +1,45 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int symbolCounter = 0;
+            int depthCounter = 0;
+            int result = 0;
+            int lastBracket = 1;
+
+            Console.WriteLine("Write string of characters '(' and ')'");
+            var text = Console.ReadLine();
+
+            for (var i = 0; i < text.Length; i++)
+            {
+
+                if (text[i] == '(')
+                    symbolCounter++;
+
+                else if (text[i] == ')')
+                {
+
+                    if (i != text.Length - 1 && text[i + 1] != '(')
+                    {
+                        depthCounter++;
+                    }
+                    symbolCounter--;
+                }
+
+                if (symbolCounter < 0)
+                {
+                    break;
+                }
+            }
+            result = depthCounter;
+
+            if (symbolCounter == 0)
+                Console.WriteLine("Your string is correct" + text + "\n" + "Depth = " + (result + lastBracket));
+            else Console.WriteLine("error " + text);
+        }
+    }
+}
