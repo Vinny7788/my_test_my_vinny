@@ -18,15 +18,16 @@ namespace School
             {
 
                 if (text[i] == '(')
+                {
                     symbolCounter++;
 
+                    if (symbolCounter > depthCounter)
+                    {
+                        depthCounter = symbolCounter;
+                    }
+                }
                 else if (text[i] == ')')
                 {
-
-                    if (i != text.Length - 1 && text[i + 1] != '(')
-                    {
-                        depthCounter++;
-                    }
                     symbolCounter--;
                 }
 
@@ -38,8 +39,10 @@ namespace School
             result = depthCounter;
 
             if (symbolCounter == 0)
-                Console.WriteLine("Your string is correct" + text + "\n" + "Depth = " + (result + lastBracket));
+                Console.WriteLine("Your string is correct" + text + "\n" + "Depth = " + result);
             else Console.WriteLine("error " + text);
         }
     }
 }
+
+
