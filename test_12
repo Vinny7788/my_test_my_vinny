@@ -15,7 +15,7 @@ namespace School
             int heavenlyThunderPower = 35;
             int wrathOfTheGodsPower = 75;
             int maxHelth = 150;
-            int playerHelth = 150;
+            int playerHelth = maxHelth;
             int healthRestoredLimit = 105;
             int healthRestored = 45;
             int enemyHelth = 250;
