@@ -11,7 +11,12 @@ namespace School
             const string CommandWrathOfTheGods = "3";
             const string CommandHeavenlyShield = "4";
 
+            int healthRestoredLimit = 105;
             int enemyPower;
+            int enemyMaxAttackLevel = 1;
+            int enemyMinAttackLevel = 4;
+            int enemyMinAttackPower = 15;
+            int enemyMaxAttackPower = 75;
             int playerHelth = 150;
             int enemyHelth = 250;
             int healthRestored = 45;
@@ -27,27 +32,27 @@ namespace School
             string activeWord = "Active";
             string inactiveWord = "Inactive";
             string statusOfWrathOfTheGods = inactiveWord;
-            bool isAttackUse = false;
-            bool isPlaing = true;
+            bool isUseAttack = false;
+            bool isPlaying = true;
 
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.CursorVisible = false;
             Console.Clear();
             Console.WriteLine("Rulles: ");
-            Console.WriteLine("1 Fireballs: They deal 15 damage.\n");
-            Console.WriteLine("2 Thunder from the heavens: This power summons Zeus and deals 35 damage.\n");
-            Console.WriteLine("3 Wrath of the gods: This is the most powerful attack that can only be used after \n  activating the Thunder from the heavens attack. It deals 75 damage.\n");
-            Console.WriteLine($"4 Celestial shield: It can be used only 3 times and restores {healthRestored} health points.\n");
+            Console.WriteLine($"{CommandFireballs} Fireballs: They deal {fireballsPower} damage.\n");
+            Console.WriteLine($"{CommandHeavenlyThunder} Thunder from the heavens: This power summons Zeus and deals {heavenlyThunderPower} damage.\n");
+            Console.WriteLine($"{CommandWrathOfTheGods} Wrath of the gods: This is the most powerful attack that can only be used after \n  activating the Thunder from the heavens attack. It deals {wrathOfTheGodsPower} damage.\n");
+            Console.WriteLine($"{CommandHeavenlyShield} Celestial shield: It can be used only 3 times and restores {healthRestored} health points.\n");
             Console.WriteLine(" After each attack, the boss will attempt to attack you, and you  \n need to choose 3 directions from which the strike will come and place your shield there.\n If you succeed, you won't take any damage.");
             Console.WriteLine("\n\n Press any button to start the game!!!");
             Console.ReadKey();
             Console.Beep();
 
-            while (isPlaing)
+            while (isPlaying)
             {
-                enemyAtackLevel = Convert.ToString(new Random().Next(1, 4));
-                enemyPower = new Random().Next(15, 71);
+                enemyAtackLevel = Convert.ToString(new Random().Next(enemyMaxAttackLevel, enemyMinAttackLevel));
+                enemyPower = new Random().Next(enemyMinAttackPower, enemyMaxAttackPower);
                 Console.Clear();
                 Console.WriteLine(" Player helth: " + playerHelth + "\n" + " Enemy helth: " + enemyHelth);
                 Console.WriteLine(" Chose attack:\n ");
@@ -55,13 +60,19 @@ namespace School
                 Console.WriteLine($" Wrath of the gods - {CommandWrathOfTheGods}  {statusOfWrathOfTheGods} \n Celestial shield - {CommandHeavenlyShield} ");
                 userInput = Console.ReadLine();
                 Console.Beep();
-
                 switch (userInput)
                 {
 
                     case (CommandFireballs):
                         Console.Clear();
                         enemyHelth -= fireballsPower;
+
+                        if (enemyHelth <= 0)
+                        {
+                            enemyHelth = 0;
+                            isPlaying = false;
+                        }
+
                         Console.WriteLine($"Great! You hit the enemy, and they have {enemyHelth}hp left");
                         Console.WriteLine($"Get ready! The enemy is attacking! Choose the side from wich he will beat:");
                         Console.WriteLine($"Left - {leftHit}\nRight - {rightHit}\nTop - {topHit}");
@@ -73,7 +84,7 @@ namespace School
                             Console.ReadLine();
                             break;
                         }
-                        else if (playerShieldInput != enemyAtackLevel)
+                        else
                         {
                             playerHelth -= enemyPower;
                             Console.WriteLine("Oh no! He hit you!");
@@ -81,6 +92,7 @@ namespace School
                             if (playerHelth <= 0)
                             {
                                 playerHelth = 0;
+                                isPlaying = false;
                             }
 
                             if (enemyAtackLevel == leftHit)
@@ -95,18 +107,25 @@ namespace School
                             {
                                 Console.WriteLine($"The attack came from the Top");
                             }
+
                             Console.WriteLine($"He deducted {enemyPower}HP from you! ");
                             Console.WriteLine($"You have {playerHelth} HP!");
                             Console.ReadLine();
-                            break;
                         }
                         break;
 
                     case (CommandHeavenlyThunder):
                         Console.Clear();
                         enemyHelth -= heavenlyThunderPower;
-                        isAttackUse = true;
+                        isUseAttack = true;
                         statusOfWrathOfTheGods = activeWord;
+
+                        if (enemyHelth <= 0)
+                        {
+                            enemyHelth = 0;
+                            isPlaying = false;
+                        }
+
                         Console.WriteLine($"Great! You hit the enemy, and they have {enemyHelth}hp left");
                         Console.WriteLine($"Get ready! The enemy is attacking! Choose the side from wich he will beat:");
                         Console.WriteLine($"Left - {leftHit}\nRight - {rightHit}\nTop - {topHit}");
@@ -118,7 +137,7 @@ namespace School
                             Console.ReadLine();
                             break;
                         }
-                        else if (playerShieldInput != enemyAtackLevel)
+                        else
                         {
                             playerHelth -= enemyPower;
                             Console.WriteLine("Oh no! He hit you!");
@@ -126,6 +145,12 @@ namespace School
                             if (playerHelth <= 0)
                             {
                                 playerHelth = 0;
+                                isPlaying = false;
+                            }
+                            if (enemyHelth <= 0)
+                            {
+                                enemyHelth = 0;
+                                isPlaying = false;
                             }
 
                             if (enemyAtackLevel == leftHit)
@@ -140,25 +165,33 @@ namespace School
                             {
                                 Console.WriteLine($"The attack came from the Top");
                             }
+
                             Console.WriteLine($"He deducted {enemyPower}HP from you! ");
                             Console.WriteLine($"You have {playerHelth} HP!");
                             Console.ReadLine();
                             break;
                         }
-                        break;
+
 
                     case (CommandWrathOfTheGods):
 
-                        if (isAttackUse)
+                        if (isUseAttack)
                         {
                             Console.Clear();
-                            isAttackUse = false;
+                            isUseAttack = false;
                             statusOfWrathOfTheGods = inactiveWord;
                             enemyHelth -= wrathOfTheGodsPower;
+
+                            if (enemyHelth <= 0)
+                            {
+                                enemyHelth = 0;
+                                isPlaying = false;
+                            }
+
                             Console.WriteLine($"Great! You hit the enemy, and they have {enemyHelth}hp left");
                             Console.WriteLine($"Get ready! The enemy is attacking! Choose the side from wich he will beat:");
                             Console.WriteLine($"Left - {leftHit}\nRight - {rightHit}\nTop - {topHit}");
-                            playerShieldInput = Convert.ToString(Console.ReadLine());
+                            playerShieldInput = Console.ReadLine();
 
                             if (playerShieldInput == enemyAtackLevel)
                             {
@@ -166,7 +199,7 @@ namespace School
                                 Console.ReadLine();
                                 break;
                             }
-                            else if (playerShieldInput != enemyAtackLevel)
+                            else
                             {
                                 playerHelth -= enemyPower;
                                 Console.WriteLine("Oh no! He hit you!");
@@ -174,6 +207,12 @@ namespace School
                                 if (playerHelth <= 0)
                                 {
                                     playerHelth = 0;
+                                    isPlaying = false;
+                                }
+                                if (enemyHelth <= 0)
+                                {
+                                    enemyHelth = 0;
+                                    isPlaying = false;
                                 }
 
                                 if (enemyAtackLevel == leftHit)
@@ -188,6 +227,7 @@ namespace School
                                 {
                                     Console.WriteLine($"The attack came from the Top");
                                 }
+
                                 Console.WriteLine($"He deducted {enemyPower}HP from you! ");
                                 Console.WriteLine($"You have {playerHelth} HP!");
                                 Console.ReadLine();
@@ -199,9 +239,9 @@ namespace School
                     case (CommandHeavenlyShield):
                         Console.Clear();
 
-                        if (playerHelth >= 105)
+                        if (playerHelth >= healthRestoredLimit)
                         { playerHelth = 150; }
-                        else if (playerHelth <= 105)
+                        else
                         {
                             playerHelth += healthRestored;
                         }
@@ -217,7 +257,7 @@ namespace School
                             Console.ReadLine();
                             break;
                         }
-                        else if (playerShieldInput != enemyAtackLevel)
+                        else
                         {
                             playerHelth -= enemyPower;
                             Console.WriteLine("Oh no! He hit you!");
@@ -225,6 +265,7 @@ namespace School
                             if (playerHelth <= 0)
                             {
                                 playerHelth = 0;
+                                isPlaying = false;
                             }
 
                             if (enemyAtackLevel == leftHit)
@@ -239,32 +280,32 @@ namespace School
                             {
                                 Console.WriteLine($"The attack came from the Top");
                             }
+
                             Console.WriteLine($"He deducted {enemyPower}HP from you! ");
                             Console.WriteLine($"You have {playerHelth} HP!");
                             Console.ReadLine();
-                            break;
                         }
                         break;
                 }
+            }
+            if (playerHelth <= 0 && enemyHelth <= 0)
+            {
+                Console.Clear();
+                Console.WriteLine("No one won!");
+                isPlaying = false;
+            }
+            else if (playerHelth <= 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Oops! You have loose");
+                isPlaying = false;
+            }
+            else if (enemyHelth <= 0)
+            {
+                Console.Clear();
+                Console.WriteLine("You win this FIGHT!!!");
+                isPlaying = false;
 
-                if (playerHelth <= 0 && enemyHelth <= 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("No one won!");
-                    isPlaing = false;
-                }
-                else if (playerHelth <= 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Oops! You have loose");
-                    isPlaing = false;
-                }
-                else if (enemyHelth <= 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("You win this FIGHT!!!");
-                    isPlaing = false;
-                }
             }
         }
     }
