@@ -7,19 +7,21 @@ namespace School
     {
         static void Main(string[] args)
         {
+            int[] arrayForReset = new int[0]; 
+            int[] mainNumbersArray = new int[1];
+            int sumOfNumbers = 0;
             string exitWord = "exit";
             string summaWord = "sum";
             string userInput;
-            int[] mainNumbersArray = new int[1];
-            int sumOfNumbers = 0;
             bool isWork = true;
 
+            Console.WriteLine($"You can write the number or command: /{exitWord}/ to exit the program , /{summaWord}/ to calculate the entered numbers.  ");
             while (isWork)
             {
 
-                Console.WriteLine("You can write the ");
-                Console.WriteLine("Write the number:");
+                Console.WriteLine("Write the number or command:");
                 userInput = Console.ReadLine();
+                Console.Clear();
 
                 if (userInput.ToLower() == exitWord)
                 {
@@ -33,9 +35,17 @@ namespace School
                     {
                         sumOfNumbers += mainNumbersArray[i];
                     }
-                    Console.WriteLine(sumOfNumbers);
+
+                    Console.WriteLine($"Summa is : {sumOfNumbers}");
+                    sumOfNumbers = 0;
+
+                    for(int i = 0;i < mainNumbersArray.Length;i++)
+                    {
+                        mainNumbersArray[i] = 0;
+                    }
+
                 }
-                else 
+                else
                 {
 
                     int[] tempNumbersArray = new int[mainNumbersArray.Length + 1];
