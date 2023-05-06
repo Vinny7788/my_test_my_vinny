@@ -1,0 +1,23 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string text;
+
+            Console.WriteLine("Writh the message: ");
+            text = Console.ReadLine();
+            string[] words = text.Split(' ');
+
+            Console.WriteLine("\n");
+
+            foreach (string word in words)
+            {
+                Console.WriteLine(word);
+            }
+        }
+    }
+}
