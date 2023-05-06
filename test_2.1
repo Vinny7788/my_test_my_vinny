@@ -6,15 +6,14 @@ namespace School
     {
         static void Main(string[] args)
         {
-            int secondLine = 1;
-            int columnNumber = 0;
+            int lineIndex = 1;
+            int columnIndex = 0;
             int productOfTheSum = 1;
             int sumOfNumbers = 0;
             int[,] numbers = { { 1, 2, 5, 8, 5, }, { 5, 3, 9, 7, 5 }, { 9, 7, 7, 4, 1 }, };
 
             for (int i = 0; i < numbers.GetLength(0); i++)
             {
-
                 for (int j = 0; j < numbers.GetLength(1); j++)
                 {
                     Console.Write(numbers[i, j] + " ");
@@ -25,12 +24,12 @@ namespace School
 
             for (int i = 0; i < numbers.GetLength(1); i++)
             {
-                sumOfNumbers += numbers[secondLine, i];
+                sumOfNumbers += numbers[lineIndex, i];
             }
 
             for (int j = 0; j < numbers.GetLength(0); j++)
             {
-                productOfTheSum *= numbers[j, columnNumber];
+                productOfTheSum *= numbers[j, columnIndex];
             }
 
             Console.WriteLine(productOfTheSum);
