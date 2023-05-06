@@ -1,0 +1,43 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int minArraySize = 10;
+            int maxArraySize = 25;
+            int minValue = 1;
+            int maxValue = 50;
+            Random random = new Random();
+            int[] numbers = new int[random.Next(minArraySize, maxArraySize)];
+            int numberToReplace;
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                numbers[i] = random.Next(minValue, maxValue);
+            }
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+
+                for (int j = i + 1; j < numbers.Length; j++)
+                {
+
+                    if (numbers[i] > numbers[j])
+                    {
+                        numberToReplace = numbers[j];
+                        numbers[j] = numbers[i];
+                        numbers[i] = numberToReplace;
+                    }
+                }
+            }
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                Console.Write(numbers[i] + " ");
+            }
+        }
+    }
+}
