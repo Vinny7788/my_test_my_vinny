@@ -1,0 +1,38 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] numbers = { 1, 2, 3, 4, 5 };
+            int userInput ;
+            int tempNumber;
+            
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                Console.Write(numbers[i] + " ");
+            }
+
+            Console.WriteLine("\nWrite the number by which to shift the array to the left :");
+            userInput = Convert.ToInt32(Console.ReadLine());
+            
+            for (int i = 0; i < userInput; i++)
+            {
+                Console.Clear();
+                tempNumber = numbers[0];
+
+                for (int j = 0; j < numbers.Length - 1; j++)
+                {
+                    numbers[j] = numbers[j + 1];
+
+                    Console.Write(numbers[j] + " ");
+                }
+
+                numbers[numbers.Length - 1] = tempNumber;
+                Console.WriteLine(numbers[numbers.Length - 1]);
+            }
+        }
+    }
+}
