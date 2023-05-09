@@ -1,0 +1,39 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            UserInput();
+        }
+
+        static void UserInput()
+        {
+            string userInput;
+            int result ;
+            bool isNumberCorrect = false;
+
+            while (!isNumberCorrect)
+            {
+                Console.WriteLine("Write the number: ");
+                userInput = Console.ReadLine();
+
+                if (int.TryParse(userInput, out result))
+                {
+                    Console.WriteLine($"Number {result} is correct!");
+                    isNumberCorrect = true;
+                }
+
+                else 
+                {
+                    Console.WriteLine("Error:");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Clear();
+                }
+            }
+        }
+
+    }
+}
