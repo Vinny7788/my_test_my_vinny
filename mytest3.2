@@ -6,23 +6,25 @@ namespace School
     {
         static void Main(string[] args)
         {
-            int healthValue = 18;
-            int maxHealthValue = 20;
+            int healthPercent = 40;
+            int maxHealthValue = 10;
             int healthPosition = 1;
-            int manaValue = 15;
-            int maxManaValue = 20;
+            int manaPercent = 30;
+            int maxManaValue = 10;
             int manaPosition = 2;
 
-            DrawBar(healthValue, maxHealthValue, ConsoleColor.Red, healthPosition, '#');
-            DrawBar(manaValue, maxManaValue, ConsoleColor.Green, manaPosition);
+            DrawBar(healthPercent, maxHealthValue, ConsoleColor.Red, healthPosition, '#');
+            DrawBar(manaPercent, maxManaValue, ConsoleColor.Green, manaPosition, '#');
 
         }
         static void DrawBar(int value, int maxValue, ConsoleColor color, int position, char symbol = ' ')
         {
+            int filledCount;
+            filledCount = maxValue * value / 100;
             string bar = "";
             ConsoleColor defaultColor = Console.BackgroundColor;
 
-            for (int i = 0; i < value; i++)
+            for (int i = 0; i < filledCount; i++)
             {
                 bar += symbol;
             }
@@ -35,7 +37,7 @@ namespace School
 
             bar = "";
 
-            for (int i = value; i < maxValue; i++)
+            for (int i = filledCount; i < maxValue; i++)
             {
                 bar += symbol;
             }
