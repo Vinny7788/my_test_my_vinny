@@ -18,8 +18,8 @@ namespace School
             string userInputPosition;
             bool isWorking = true;
 
-            string[] fullName = new string[] { "Ariana Ford", "Rose Everett", "Gerald Deleon", "Rory Raymond", "Ayah Finley", "Krystal Barnes", "Yousuf Gallegos", "Maxwell Rubio", "Lulu Hobbs", "Alistair Vaughan" };
-            string[] position = new string[] { "CEO", "Administrative Assistant", "Receptionist", "Executive Assistant", "Human Resources Manager", "Marketing Manager", "Sales Manager", "Customer Service Representative", "Project Manager", "Accountant" };
+            string[] fullNames = new string[] { "Ariana Ford", "Rose Everett", "Gerald Deleon", "Rory Raymond", "Ayah Finley", "Krystal Barnes", "Yousuf Gallegos", "Maxwell Rubio", "Lulu Hobbs", "Alistair Vaughan" };
+            string[] positions = new string[] { "CEO", "Administrative Assistant", "Receptionist", "Executive Assistant", "Human Resources Manager", "Marketing Manager", "Sales Manager", "Customer Service Representative", "Project Manager", "Accountant" };
 
             ChangeColor(ConsoleColor.White, ConsoleColor.Black);
 
@@ -31,121 +31,112 @@ namespace School
                 switch (Console.ReadLine())
                 {
                     case CommandAddDossier:
-                        Clear();
-                        Console.WriteLine("Write The Full Name: ");
-                        userInputFullName = Console.ReadLine();
-
-                        Console.WriteLine("Write The Position");
-                        userInputPosition = Console.ReadLine();
-
-                        fullName = AddDossier(fullName, userInputFullName);
-                        position = AddDossier(position, userInputPosition);
-
-                        TextChangeColor("Operation Completed!!!", ConsoleColor.Green);
-                        System.Threading.Thread.Sleep(delay);
+                        AddDossier(ref fullNames, ref positions, delay);
                         break;
 
                     case CommandPrintAllDossier:
-                        Clear();
-                        ReadArray(fullName, position);
-
-                        Console.WriteLine("Press any key...");
-                        Console.ReadLine();
+                        ShowDossier(fullNames, positions);
                         break;
 
                     case CommandDeleteDossier:
-                        Clear();
-                        TextChangeColor("Write the file index to delete it: ", ConsoleColor.Magenta);
-                        userInput = Console.ReadLine();
-
-                        DeleteDossier(ref fullName, ref position, userInput, delay);
+                        DeleteDossier(ref fullNames, ref positions, delay);
                         break;
 
                     case CommandSerch:
-                        Clear();
-                        TextChangeColor("Please write the last name:", ConsoleColor.Magenta);
-                        userInput = Console.ReadLine();
-
-                        Search(fullName, position, userInput, delay);
+                        Search(fullNames, positions, delay);
                         break;
 
                     case CommandExit:
-                        Clear();
                         isWorking = Exit(isWorking);
                         break;
                 }
             }
         }
 
-        static void Search(string[] fullName, string[] position, string userInput, int delay)
+        static void Search(string[] fullNames, string[] positions, int delay)
         {
+            int delayModificator = 2000;
             int oneSkipping = 1;
             bool isSercheComplite = false;
+            string userInput;
+            char splitsymbol = ' ';
 
-            for (int i = 0; i < fullName.Length; i++)
+            Clear();
+            TextChangeColor("Please write the last name:", ConsoleColor.Magenta);
+            userInput = Console.ReadLine();
+
+            for (int i = 0; i < fullNames.Length; i++)
             {
-                string[] split = fullName[i].Split(' ');
+                string[] split = fullNames[i].Split(splitsymbol);
 
                 if (split[1].ToLower() == userInput.ToLower())
                 {
-                    Console.WriteLine($"{i + oneSkipping}/ {fullName[i]} - {position[i]}");
+                    Console.WriteLine($"{i + oneSkipping}/ {fullNames[i]} - {positions[i]}");
                     isSercheComplite = true;
-                    System.Threading.Thread.Sleep(2000);
-                    break;
-                }
-                else
-                {
-                    isSercheComplite = false;
+
+                    System.Threading.Thread.Sleep(delay + delayModificator);        
                 }
             }
 
-            if (!isSercheComplite)
+            if (isSercheComplite == false)
             {
                 Clear();
                 TextChangeColor($"\aUser Not Found !!! -  {userInput}");
+
                 System.Threading.Thread.Sleep(delay);
                 Clear();
             }
         }
 
-        static void DeleteDossier(ref string[] fullName, ref string[] position, string ussetInput, int delay)
+        static void DeleteDossier(ref string[] fullNames, ref string[] positions, int delay)
         {
+            string userInput;
+            Clear();
+            TextChangeColor("Write the file index to delete it: ", ConsoleColor.Magenta);
+            userInput = Console.ReadLine();
+
             int oneSkipping = 1;
-            int number = int.Parse(ussetInput);
+            int number = int.Parse(userInput);
             int dossierNumber;
 
-            if (number > 0 && number <= fullName.Length)
+            if (number > 0 && number <= fullNames.Length)
             {
                 dossierNumber = number - oneSkipping;
 
-                Console.WriteLine($"Dossier #{number} {fullName[number - oneSkipping]} - {position[number - oneSkipping]}. Was deleted.");
+                Console.WriteLine($"Dossier #{number} {fullNames[number - oneSkipping]} - {positions[number - oneSkipping]}. Was deleted.");
                 TextChangeColor("Operation Completed!!!\n", ConsoleColor.Green);
 
-                fullName = Delete(fullName, dossierNumber);
-                position = Delete(position, dossierNumber);
+                fullNames = Delete(fullNames, dossierNumber);
+                positions = Delete(positions, dossierNumber);
                 System.Threading.Thread.Sleep(5000);
             }
             else
             {
                 Clear();
                 TextChangeColor("\aError! Dossier not found!", ConsoleColor.Red);
+
                 System.Threading.Thread.Sleep(delay);
             }
         }
 
-        static string[] AddDossier(string[] array, string userInput)
+        static void AddDossier(ref string[] arrayOne, ref string[] arrayTwo, int delay)
         {
-            int oneSkipping = 1;
-            string[] tempArray = new string[array.Length + oneSkipping];
+            Clear();
+            string userInputFullName;
+            string userInputPosition;
 
-            for (int i = 0; i < array.Length; i++)
-            {
-                tempArray[i] = array[i];
-            }
+            Console.WriteLine("Write The Full Name: ");
+            userInputFullName = Console.ReadLine();
 
-            tempArray[tempArray.Length - 1] = userInput;
-            array = tempArray;
-            return array;
+            Console.WriteLine("Write The Position");
+            userInputPosition = Console.ReadLine();
+            Clear();
+
+            arrayOne = ArrayExpansion(arrayOne, userInputFullName);
+            arrayTwo = ArrayExpansion(arrayTwo, userInputPosition);
+
+            TextChangeColor("Operation Completed!!!", ConsoleColor.Green);
+            System.Threading.Thread.Sleep(delay);
         }
 
         static void ChangeColor(ConsoleColor backGroundColor, ConsoleColor color)
@@ -155,18 +146,24 @@ namespace School
             Console.Clear();
         }
 
-        static void ReadArray(string[] arrayOne, string[] arrayTwo)
+        static void ShowDossier(string[] names, string[] positions)
         {
             int oneSkipping = 1;
-            for (int i = 0; i < arrayOne.Length; i++)
+
+            Clear();
+
+            for (int i = 0; i < names.Length; i++)
             {
-                Console.WriteLine($"{i + oneSkipping}/ {arrayOne[i]} - {arrayTwo[i]}");
+                Console.WriteLine($"{i + oneSkipping}/ {names[i]} - {positions[i]}");
             }
 
+            Console.WriteLine("Press any key...");
+            Console.ReadLine();
         }
 
         static bool Exit(bool isWorking)
         {
+            Clear();
             isWorking = false;
             return isWorking;
         }
@@ -212,6 +209,22 @@ namespace School
             }
 
             array = tempArray;
+            return array;
+        }
+
+        static string[] ArrayExpansion(string[] array, string userInput)
+        {
+            int oneSkipping = 1;
+            string[] tempArray = new string[array.Length + oneSkipping];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                tempArray[i] = array[i];
+            }
+
+            tempArray[tempArray.Length - 1] = userInput;
+            array = tempArray;
+
             return array;
         }
     }
