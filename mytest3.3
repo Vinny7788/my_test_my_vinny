@@ -6,13 +6,15 @@ namespace School
     {
         static void Main(string[] args)
         {
-            СheckNumber();
+            int corectResult;
+
+            corectResult = СheckNumber();
         }
 
-        static void СheckNumber()
+        static int СheckNumber()
         {
             string userInput;
-            int result;
+            int result = 0;
             bool isNumberCorrect = false;
 
             while (isNumberCorrect == false)
@@ -23,9 +25,8 @@ namespace School
                 if (int.TryParse(userInput, out result))
                 {
                     Console.WriteLine($"Number {result} is correct!");
-                    isNumberCorrect = true;
+                    isNumberCorrect = true;                    
                 }
-
                 else
                 {
                     Console.WriteLine("Error:");
@@ -33,6 +34,7 @@ namespace School
                     Console.Clear();
                 }
             }
+            return result;
         }
     }
 }
