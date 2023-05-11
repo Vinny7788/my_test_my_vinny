@@ -7,11 +7,11 @@ namespace School
         static void Main(string[] args)
         {
             int corectResult;
-
-            corectResult = СheckNumber();
+            corectResult = ConversionNumber();
+            Console.WriteLine($"Number {corectResult} is correct!");
         }
 
-        static int СheckNumber()
+        static int ConversionNumber()
         {
             string userInput;
             int result = 0;
@@ -23,14 +23,13 @@ namespace School
                 userInput = Console.ReadLine();
 
                 if (int.TryParse(userInput, out result))
-                {
-                    Console.WriteLine($"Number {result} is correct!");
-                    isNumberCorrect = true;                    
+                { 
+                    isNumberCorrect = true;
                 }
                 else
                 {
                     Console.WriteLine("Error:");
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(500);
                     Console.Clear();
                 }
             }
