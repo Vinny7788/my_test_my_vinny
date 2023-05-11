@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string information;
+            string userInput;
+            bool isWorking = true;
+            string exit = "Exit";
+
+            Dictionary<string, string> dictinory = new Dictionary<string, string>();
+            dictinory = AddInfoToDictionary(dictinory);
+
+            while (isWorking)
+            {
+                Console.Write("Write the word to see its meaning : ");
+                userInput = Console.ReadLine();
+
+                if (userInput.ToLower() == exit.ToLower())
+                {
+                    isWorking = false;
+                    Console.WriteLine("Good bye!");
+                }
+                else
+                {
+                    Console.Clear();
+                    ChekDictinory(userInput, dictinory, out information);
+                    Console.WriteLine(information);
+                }
+            }
+        }
+
+        static Dictionary<string, string> AddInfoToDictionary(Dictionary<string, string> dictinory)
+        {
+            dictinory.Add("success", "the achievement of a desired outcome or goal.");
+            dictinory.Add("serenity", "a state of calmness, peace, and tranquility.");
+            dictinory.Add("integrity", "the quality of being honest, having strong moral principles, and adhering to ethical values.");
+            dictinory.Add("resilience", "the ability to recover quickly from difficulties or setbacks.");
+            dictinory.Add("empathy", "the ability to understand and share the feelings of others.");
+            dictinory.Add("innovation", "the introduction of new ideas, methods, or products.");
+            dictinory.Add("harmony", "a state of agreement, compatibility, or peaceful coexistence.");
+
+            return dictinory;
+        }
+
+        static void ChekDictinory(string userInput, Dictionary<string, string> dictinory, out string information)
+        {
+            string TryAgain = "Try Again: ";
+            information = " ";
+
+            if (dictinory.ContainsKey(userInput.ToLower()))
+            {
+                information = (dictinory[userInput.ToLower()]);
+            }
+            else
+            {
+                information = TryAgain;
+            }
+        }
+    }
+}
