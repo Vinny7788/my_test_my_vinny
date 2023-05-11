@@ -62,7 +62,7 @@ namespace School
             char splitsymbol = ' ';
 
             Clear();
-            TextChangeColor("Please write the last name:", ConsoleColor.Magenta);
+            ChangeTextColor("Please write the last name:", ConsoleColor.Magenta);
             userInput = Console.ReadLine();
 
             for (int i = 0; i < fullNames.Length; i++)
@@ -74,14 +74,14 @@ namespace School
                     Console.WriteLine($"{i + oneSkipping}/ {fullNames[i]} - {positions[i]}");
                     isSercheComplite = true;
 
-                    System.Threading.Thread.Sleep(delay + delayModificator);        
+                    System.Threading.Thread.Sleep(delay + delayModificator);
                 }
             }
 
             if (isSercheComplite == false)
             {
                 Clear();
-                TextChangeColor($"\aUser Not Found !!! -  {userInput}");
+                ChangeTextColor($"\aUser Not Found !!! -  {userInput}");
 
                 System.Threading.Thread.Sleep(delay);
                 Clear();
@@ -92,7 +92,7 @@ namespace School
         {
             string userInput;
             Clear();
-            TextChangeColor("Write the file index to delete it: ", ConsoleColor.Magenta);
+            ChangeTextColor("Write the file index to delete it: ", ConsoleColor.Magenta);
             userInput = Console.ReadLine();
 
             int oneSkipping = 1;
@@ -104,7 +104,7 @@ namespace School
                 dossierNumber = number - oneSkipping;
 
                 Console.WriteLine($"Dossier #{number} {fullNames[number - oneSkipping]} - {positions[number - oneSkipping]}. Was deleted.");
-                TextChangeColor("Operation Completed!!!\n", ConsoleColor.Green);
+                ChangeTextColor("Operation Completed!!!\n", ConsoleColor.Green);
 
                 fullNames = Delete(fullNames, dossierNumber);
                 positions = Delete(positions, dossierNumber);
@@ -113,7 +113,7 @@ namespace School
             else
             {
                 Clear();
-                TextChangeColor("\aError! Dossier not found!", ConsoleColor.Red);
+                ChangeTextColor("\aError! Dossier not found!", ConsoleColor.Red);
 
                 System.Threading.Thread.Sleep(delay);
             }
@@ -132,10 +132,10 @@ namespace School
             userInputPosition = Console.ReadLine();
             Clear();
 
-            arrayOne = ArrayExpansion(arrayOne, userInputFullName);
-            arrayTwo = ArrayExpansion(arrayTwo, userInputPosition);
+            arrayOne = ExpansionArray(arrayOne, userInputFullName);
+            arrayTwo = ExpansionArray(arrayTwo, userInputPosition);
 
-            TextChangeColor("Operation Completed!!!", ConsoleColor.Green);
+            ChangeTextColor("Operation Completed!!!", ConsoleColor.Green);
             System.Threading.Thread.Sleep(delay);
         }
 
@@ -168,7 +168,7 @@ namespace School
             return isWorking;
         }
 
-        static void TextChangeColor(string text, ConsoleColor color = ConsoleColor.Red)
+        static void ChangeTextColor(string text, ConsoleColor color = ConsoleColor.Red)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(text);
@@ -212,7 +212,7 @@ namespace School
             return array;
         }
 
-        static string[] ArrayExpansion(string[] array, string userInput)
+        static string[] ExpansionArray(string[] array, string userInput)
         {
             int oneSkipping = 1;
             string[] tempArray = new string[array.Length + oneSkipping];
