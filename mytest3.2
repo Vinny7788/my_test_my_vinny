@@ -7,43 +7,47 @@ namespace School
         static void Main(string[] args)
         {
             int healthPercent = 40;
-            int maxHealthValue = 10;
+            int barLength = 10;
             int healthPosition = 1;
             int manaPercent = 30;
-            int maxManaValue = 10;
             int manaPosition = 2;
 
-            DrawBar(healthPercent, maxHealthValue, ConsoleColor.Red, healthPosition, '#');
-            DrawBar(manaPercent, maxManaValue, ConsoleColor.Green, manaPosition, '#');
-
+            DrawBar(healthPercent, barLength, ConsoleColor.Red, healthPosition, '#');
+            DrawBar(manaPercent, barLength, ConsoleColor.Green, manaPosition, '#');
         }
-        static void DrawBar(int value, int maxValue, ConsoleColor color, int position, char symbol = ' ')
+
+        static void DrawBar(int prcentageOfoccupancy, int barLength, ConsoleColor color, int position, char symbol = ' ')
         {
+            int divisor = 100;
             int filledCount;
-            filledCount = maxValue * value / 100;
+            filledCount = barLength * prcentageOfoccupancy / divisor;
             string bar = "";
             ConsoleColor defaultColor = Console.BackgroundColor;
 
-            for (int i = 0; i < filledCount; i++)
-            {
-                bar += symbol;
-            }
+            bar = Draw(filledCount, bar, symbol);
 
             Console.SetCursorPosition(0, position);
             Console.Write('[');
             Console.BackgroundColor = color;
             Console.Write(bar);
             Console.BackgroundColor = defaultColor;
-
             bar = "";
 
-            for (int i = filledCount; i < maxValue; i++)
-            {
-                bar += symbol;
-            }
+            bar = Draw(barLength, bar, symbol, filledCount);
 
             Console.Write(bar + ']');
             Console.SetCursorPosition(0, 3);
         }
-    }
+
+        static string Draw(int comparsionNumber, string bar, char symbol, int numberI = 0)
+        {
+
+            for (int i = numberI; i < comparsionNumber; i++)
+            {
+                bar += symbol;
+            }
+
+            return bar;
+        }
+    }   
 }
