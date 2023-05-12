@@ -7,20 +7,19 @@ namespace School
     {
         static void Main(string[] args)
         {
-            string information = " ";
             string userInput;
             bool isWorking = true;
-            string exit = "Exit";
+            string exitFromProgram = "Exit";
 
             Dictionary<string, string> dictinory = new Dictionary<string, string>();
-            dictinory = AddInfoToDictionary(dictinory);
+            AddInfoToDictionary(dictinory);
 
             while (isWorking)
             {
                 Console.Write("Write the word to see its meaning : ");
                 userInput = Console.ReadLine();
 
-                if (userInput.ToLower() == exit.ToLower())
+                if (userInput.ToLower() == exitFromProgram.ToLower())
                 {
                     isWorking = false;
                     Console.WriteLine("Good bye!");
@@ -28,13 +27,12 @@ namespace School
                 else
                 {
                     Console.Clear();
-                    information = ChekDictinory(userInput, dictinory, information);
-                    Console.WriteLine(information);
+                    FindMeaningOfTheWord(userInput, dictinory);
                 }
             }
         }
 
-        static Dictionary<string, string> AddInfoToDictionary(Dictionary<string, string> dictinory)
+        static void AddInfoToDictionary(Dictionary<string, string> dictinory)
         {
             dictinory.Add("success", "the achievement of a desired outcome or goal.");
             dictinory.Add("serenity", "a state of calmness, peace, and tranquility.");
@@ -43,25 +41,20 @@ namespace School
             dictinory.Add("empathy", "the ability to understand and share the feelings of others.");
             dictinory.Add("innovation", "the introduction of new ideas, methods, or products.");
             dictinory.Add("harmony", "a state of agreement, compatibility, or peaceful coexistence.");
-
-            return dictinory;
         }
 
-        static string ChekDictinory(string userInput, Dictionary<string, string> dictinory, string information)
+        static void FindMeaningOfTheWord(string userInput, Dictionary<string, string> dictinory)
         {
-            string tryAgain = "Try Again: ";
-            information = " ";
+            string meaningNotFound = "The meaning of the word was not found. Please enter another word. ";
 
             if (dictinory.ContainsKey(userInput.ToLower()))
             {
-                information = (dictinory[userInput.ToLower()]);
+                Console.WriteLine((dictinory[userInput.ToLower()]));    
             }
             else
             {
-                information = tryAgain;
-            }
-
-            return information;
+                Console.WriteLine(meaningNotFound);
+            }  
         }
     }
 }
