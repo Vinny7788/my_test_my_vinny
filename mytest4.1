@@ -1,0 +1,138 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int soldItems = 0;
+            int summa = 0;
+            int ballance = 0;
+            int clientNumber = 1;
+
+            List<string> goods = new List<string>();
+            List<int> price = new List<int>();
+            Queue<string> client = new Queue<string>();
+
+            Console.CursorVisible = false;
+
+            AddToListGoods(goods);
+            AddToListPrice(price);
+            AddToQueueClient(client);
+
+            while (client.Count > 0)
+            {
+                WriteBallanceAndClientNumber(clientNumber, ballance);
+
+                ProcesPurchase(goods, price, ref summa, ref clientNumber);
+
+                SummaryCustomerPurchase(ref ballance, ref summa);
+
+                RestartSummaAndConsole(ref summa, client);
+            }
+
+            calculationTotalPurchaseAmount(ballance, clientNumber);
+        }
+
+        static void SummaryCustomerPurchase(ref int ballance, ref int summa)
+        {
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine($"Summa :{summa}");
+            ballance += summa;
+        }
+
+        static void ProcesPurchase(List<string> goods, List<int> price, ref int summa, ref int clientNumber)
+        {
+            int speed = 250;
+            int firstProduct = 0;
+            int lastProduct = 15;
+            int minCountOfProduct = 3;
+            int maxCountOfProduct = 9;
+
+            Random randomNumber = new Random();
+
+            clientNumber++;
+
+            for (int i = 0; i < randomNumber.Next(minCountOfProduct, maxCountOfProduct); i++)
+            {
+                int j = randomNumber.Next(firstProduct, lastProduct);
+                Console.WriteLine($"Goods: {goods[j]} // Price: {price[j]} euro.");
+                Thread.Sleep(speed);
+                summa += price[j];
+            }
+        }
+
+        static void RestartSummaAndConsole(ref int summa, Queue<string> client)
+        {
+            Console.ReadKey();
+            Console.Clear();
+            summa = 0;
+            client.Dequeue();
+        }
+
+        static void WriteBallanceAndClientNumber(int clientNumber, int ballance)
+        {
+            Console.SetCursorPosition(50, 0);
+            Console.WriteLine($"Client number:{clientNumber} / {ballance}");
+            Console.SetCursorPosition(0, 0);
+        }
+
+        static void AddToListGoods(List<string> goods)
+        {
+            goods.Add("Bread");
+            goods.Add("Milk");
+            goods.Add("Eggs");
+            goods.Add("Cheese");
+            goods.Add("Yogurt");
+            goods.Add("Chicken");
+            goods.Add("Beef");
+            goods.Add("Apples");
+            goods.Add("Bananas");
+            goods.Add("Tomatoes");
+            goods.Add("Potatoes");
+            goods.Add("Pasta");
+            goods.Add("Rice");
+            goods.Add("Chocolate");
+            goods.Add("Ice cream");
+        }
+
+        static void AddToListPrice(List<int> price)
+        {
+            price.Add(2);
+            price.Add(3);
+            price.Add(4);
+            price.Add(5);
+            price.Add(3);
+            price.Add(6);
+            price.Add(9);
+            price.Add(1);
+            price.Add(1);
+            price.Add(2);
+            price.Add(3);
+            price.Add(2);
+            price.Add(3);
+            price.Add(4);
+            price.Add(5);
+        }
+
+        static void AddToQueueClient(Queue<string> client)
+        {
+            client.Enqueue("Client 1");
+            client.Enqueue("Client 2");
+            client.Enqueue("Client 3");
+            client.Enqueue("Client 4");
+            client.Enqueue("Client 5");
+            client.Enqueue("Client 6");
+            client.Enqueue("Client 7");
+            client.Enqueue("Client 8");
+        }
+
+        static void calculationTotalPurchaseAmount(int ballance, int clientNumber)
+        {
+            Console.WriteLine($"The Total earnings for the day {ballance}$.\nWe served {clientNumber} person");
+        }
+    }
+}
