@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Media;
 
 namespace School
 {
@@ -8,24 +7,31 @@ namespace School
     {
         static void Main(string[] args)
         {
+            char wall = '#';
+            char player = '$';
             bool isPlaying = true;
-            int playerX;
-            int playerY;
-            int playerDX = 0;
-            int playerDY = 0;
-            char[,] map = ReadMap("map1", out playerX, out playerY);
+            int playerPositionX;
+            int playerPositionY;
+            int playerPositionXDirectionally = 0;
+            int playerPositionYDirectionally = 0;
+            char[,] map = ReadMap("map1", out playerPositionX, out playerPositionY,player);
             Console.CursorVisible = false;
 
             Draw(map);
 
             while (isPlaying)
             {
-                Move(playerDX, playerDY,ref playerX, ref playerY,map);
+                MoveDirectionally(playerPositionXDirectionally, playerPositionYDirectionally, ref playerPositionX, ref playerPositionY, map,player,wall);
             }
         }
 
-        static void Move(int playerDX,int playerDY,ref int playerX ,ref int playerY,  char[,] map)
+        static void MoveDirectionally(int playerPositionXDirectionally, int playerPositionYDirectionally, ref int playerPositionX, ref int playerPositionY, char[,] map,char player,char wall)
         {
+            const ConsoleKey CommandUpArrowKey = ConsoleKey.UpArrow;
+            const ConsoleKey CommandDownArrowKey = ConsoleKey.DownArrow;
+            const ConsoleKey CommandLeftArrowKey = ConsoleKey.LeftArrow;
+            const ConsoleKey CommandRightArrowKey = ConsoleKey.RightArrow;
+
             int zeroPosition = 0;
             int moveUp = -1;
             int moveDown = 1;
@@ -38,42 +44,42 @@ namespace School
 
                 switch (key.Key)
                 {
-                    case ConsoleKey.UpArrow:
-                        playerDX = moveUp;
-                        playerDY = zeroPosition;
+                    case CommandUpArrowKey:
+                        playerPositionXDirectionally = moveUp;
+                        playerPositionYDirectionally = zeroPosition;
                         break;
-                    case ConsoleKey.DownArrow:
-                        playerDX = moveDown;
-                        playerDY = zeroPosition;
+
+                    case CommandDownArrowKey:
+                        playerPositionXDirectionally = moveDown;
+                        playerPositionYDirectionally = zeroPosition;
                         break;
-                    case ConsoleKey.LeftArrow:
-                        playerDX = zeroPosition;
-                        playerDY = moveLeft;
+
+                    case CommandLeftArrowKey:
+                        playerPositionXDirectionally = zeroPosition;
+                        playerPositionYDirectionally = moveLeft;
                         break;
-                    case ConsoleKey.RightArrow:
-                        playerDX = zeroPosition;
-                        playerDY = moveRight;
+
+                    case CommandRightArrowKey:
+                        playerPositionXDirectionally = zeroPosition;
+                        playerPositionYDirectionally = moveRight;
                         break;
                 }
 
-                if (map[playerX + playerDX, playerY + playerDY] != '#')
+                if (map[playerPositionX + playerPositionXDirectionally, playerPositionY + playerPositionYDirectionally] != wall)
                 {
-                    Console.SetCursorPosition(playerY, playerX);
-                    Console.Write(" ");
 
-                    playerX += playerDX;
-                    playerY += playerDY;
+                    Move(ref playerPositionX, ref playerPositionXDirectionally, ref playerPositionY, ref playerPositionYDirectionally, map, player);
 
-                    Console.SetCursorPosition(playerY, playerX);
-                    Console.Write('$');
                 }
             }
         }
 
         static void Draw(char[,] map)
         {
+
             for (int i = 0; i < map.GetLength(0); i++)
             {
+
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
                     Console.Write(map[i, j]);
@@ -82,7 +88,7 @@ namespace School
             }
         }
 
-        static char[,] ReadMap(string mapName, out int playerX, out int playerY)
+        static char[,] ReadMap(string mapName, out int playerX, out int playerY,char player)
         {
             playerX = 0;
             playerY = 0;
@@ -97,7 +103,7 @@ namespace School
                 {
                     map[i, j] = newFile[i][j];
 
-                    if (map[i, j] == '$')
+                    if (map[i, j] == player)
                     {
                         playerX = i;
                         playerY = j;
@@ -105,6 +111,22 @@ namespace School
                 }
             }
             return map;
+        }
+
+        static void ClearAndSetCursorPosition(int playerPositionY, int playerPositionX, char symbol = ' ')
+        {
+            Console.SetCursorPosition(playerPositionY, playerPositionX);
+            Console.Write(symbol);
+        }
+
+        static void Move(ref int playerPositionX, ref int playerPositionXDirectionally, ref int playerPositionY, ref int playerPositionYDirectionally, char[,] map,char player)
+        {
+            ClearAndSetCursorPosition(playerPositionY, playerPositionX);
+
+            playerPositionX += playerPositionXDirectionally;
+            playerPositionY += playerPositionYDirectionally;
+
+            ClearAndSetCursorPosition(playerPositionY, playerPositionX, player);
         }
     }
 }
