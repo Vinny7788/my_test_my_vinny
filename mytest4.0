@@ -7,7 +7,7 @@ namespace School
     {
         static void Main(string[] args)
         {
-            string information;
+            string information = " ";
             string userInput;
             bool isWorking = true;
             string exit = "Exit";
@@ -28,7 +28,7 @@ namespace School
                 else
                 {
                     Console.Clear();
-                    ChekDictinory(userInput, dictinory, out information);
+                    information = ChekDictinory(userInput, dictinory, information);
                     Console.WriteLine(information);
                 }
             }
@@ -47,9 +47,9 @@ namespace School
             return dictinory;
         }
 
-        static void ChekDictinory(string userInput, Dictionary<string, string> dictinory, out string information)
+        static string ChekDictinory(string userInput, Dictionary<string, string> dictinory, string information)
         {
-            string TryAgain = "Try Again: ";
+            string tryAgain = "Try Again: ";
             information = " ";
 
             if (dictinory.ContainsKey(userInput.ToLower()))
@@ -58,8 +58,10 @@ namespace School
             }
             else
             {
-                information = TryAgain;
+                information = tryAgain;
             }
+
+            return information;
         }
     }
 }
