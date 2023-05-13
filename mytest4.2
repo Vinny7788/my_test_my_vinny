@@ -1,0 +1,58 @@
+using System;
+using System.Collections.Generic;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.CursorVisible = false;
+
+            int maxNumberInQueue = 15;
+            int minNumberInQueue = 5;
+            int minSumPurchase = 5;
+            int maxSumPurchase = 25;
+            int ballance = 0;
+            int clientCounter = 1;
+
+            Random randomNumber = new Random();
+            Queue<int> purchaseSums = new Queue<int>();
+
+            CreatingQueue(randomNumber, purchaseSums, maxNumberInQueue, minNumberInQueue, minSumPurchase, maxSumPurchase);
+
+            foreach (var sum in purchaseSums)
+            {
+                Console.SetCursorPosition(0, 4);
+                ChangeWordColor($"Ballance = {ballance}/ Client = {clientCounter}", ConsoleColor.Green);
+                Console.SetCursorPosition(0, 0);
+
+                clientCounter++;
+                ballance += sum;
+
+                Console.WriteLine($"The total purchase amount of the customer = {sum}");
+                Console.ReadLine();
+            }
+
+            Console.Clear();
+            ChangeWordColor($"Total number of servered customers: {clientCounter}\nTotal amount of issued money: {ballance}$", ConsoleColor.Blue);
+        }
+
+        static void ChangeWordColor(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defaultColor;
+        }
+
+        static void CreatingQueue(Random randomNumber, Queue<int> purchaseSums, int maxNumberInQueue, int minNumberInQueue, int minSumPurchase, int maxSumPurchase)
+        {
+
+            for (int i = 0; i < randomNumber.Next(minNumberInQueue, maxNumberInQueue); i++)
+            {
+                purchaseSums.Enqueue(randomNumber.Next(5, 25));
+            }
+        }
+    }
+}
