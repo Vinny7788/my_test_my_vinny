@@ -1,0 +1,101 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            List<int> numbers = new List<int>();
+
+            int sumNumbers = 0;
+            string exitProgram = "exit";
+            string sumWord = "sum";
+            string userInput;
+            bool isWork = true;
+
+            Console.WriteLine($"You can write the number or command: /{exitProgram}/ to exit the program , /{sumWord}/ to calculate the entered numbers.  ");
+
+            WriteText("Press Enter to continue", ConsoleColor.Blue);
+            Console.ReadKey();
+            Console.Clear();
+
+            while (isWork)
+            {
+                userInput = ReqestNumber(out userInput);
+
+                if (userInput.ToLower() == exitProgram.ToLower())
+                {
+                    Console.Clear();
+                    Console.WriteLine("Goodbye!!!");
+
+                    isWork = false;
+                }
+                else if (userInput.ToLower() == sumWord.ToLower())
+                {
+                    sumNumbers = CountNumbers(numbers, sumNumbers);
+
+                    WriteText($"Sum of entered numbers = {sumNumbers}");
+
+                    WriteText("Press Enter to continue", ConsoleColor.Blue);
+                    Console.ReadKey();
+                    Console.Clear();
+
+                    sumNumbers = 0;
+                    numbers.Clear();
+                }
+                else
+                {
+                    AdditionArray(userInput, numbers);
+                }
+            }
+        }
+
+        static int CountNumbers(List<int> numbers, int sumNumbers)
+        {
+
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                sumNumbers += numbers[i];
+            }
+
+            return sumNumbers;
+        }
+
+        static void AdditionArray(string userInput, List<int> numbers)
+        {
+            int usserInputNumber;
+            int delayTime = 1500;
+
+            if (int.TryParse(userInput, out usserInputNumber))
+            {
+                numbers.Add(usserInputNumber);
+            }
+            else
+            {
+                WriteText("Incorrect Command", ConsoleColor.Red);
+
+                Thread.Sleep(delayTime);
+                Console.Clear();
+            }
+        }
+
+        static void WriteText(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            ConsoleColor defualt = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defualt;
+        }
+
+        static string ReqestNumber(out string userInput)
+        {
+            Console.WriteLine("Write the number or command:");
+            userInput = Console.ReadLine();
+            Console.Clear();
+            return userInput;
+        }
+    }
+}
