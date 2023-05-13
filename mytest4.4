@@ -1,0 +1,139 @@
+using System;
+using System.Collections.Generic;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string CommandAddDossier = "1";
+            const string CommandPrintAllDossier = "2";
+            const string CommandDeleteDossier = "3";
+            const string CommandExit = "4";
+
+            int delay = 4500;
+            bool isWorking = true;
+
+            List<string> fullNames = new List<string> { "Ariana Ford", "Rose Everett", "Gerald Deleon", "Rory Raymond", "Ayah Finley", "Krystal Barnes", "Yousuf Gallegos", "Maxwell Rubio", "Lulu Hobbs", "Alistair Vaughan" };
+            List<string> positions = new List<string> { "CEO", "Administrative Assistant", "Receptionist", "Executive Assistant", "Human Resources Manager", "Marketing Manager", "Sales Manager", "Customer Service Representative", "Project Manager", "Accountant" };
+
+            ChangeColor(ConsoleColor.White, ConsoleColor.Black);
+
+            while (isWorking)
+            {
+                Clear();
+                PrintMainText(CommandAddDossier, CommandPrintAllDossier, CommandDeleteDossier, CommandExit);
+
+                switch (Console.ReadLine())
+                {
+                    case CommandAddDossier:
+                        AddDossier(fullNames, positions, delay);
+                        break;
+
+                    case CommandPrintAllDossier:
+                        ShowDossier(fullNames, positions);
+                        break;
+
+                    case CommandDeleteDossier:
+                        DeleteDossier(fullNames, positions, delay);
+                        break;
+
+                    case CommandExit:
+                        isWorking = Exit(isWorking);
+                        break;
+                }
+            }
+        }
+
+        static void DeleteDossier(List<string> fullNames, List<string> positions, int delay)
+        {
+            string userInput;
+            int oneSkip = 1;
+
+            Clear();
+            WriteText("Write the file index to delete it: ", ConsoleColor.Magenta);
+            userInput = Console.ReadLine();
+
+            fullNames.RemoveAt(Convert.ToInt32(userInput) - oneSkip);
+            positions.RemoveAt(Convert.ToInt32(userInput) - oneSkip);
+
+            WriteText("Operation Completed!!!", ConsoleColor.Green);
+            System.Threading.Thread.Sleep(delay);
+        }
+
+        static void AddDossier(List<string> fullNames, List<string> position, int delay)
+        {
+            Clear();
+            string userInputFullName;
+            string userInputPosition;
+
+            Console.WriteLine("Write The Full Name: ");
+            userInputFullName = Console.ReadLine();
+
+            Console.WriteLine("Write The Position");
+            userInputPosition = Console.ReadLine();
+            Clear();
+
+            fullNames.Add(userInputFullName);
+            position.Add(userInputPosition);
+
+            WriteText("Operation Completed!!!", ConsoleColor.Green);
+            System.Threading.Thread.Sleep(delay);
+        }
+
+        static void ChangeColor(ConsoleColor backGroundColor, ConsoleColor color)
+        {
+            Console.BackgroundColor = backGroundColor;
+            Console.ForegroundColor = color;
+            Console.Clear();
+        }
+
+        static void ShowDossier(List<string> fullNames, List<string> position)
+        {
+            int oneSkipping = 1;
+
+            Clear();
+
+            for (int i = 0; i < fullNames.Count; i++)
+            {
+                Console.WriteLine($"{i + oneSkipping}/ {fullNames[i]} - {position[i]}");
+            }
+
+            Console.WriteLine("Press any key...");
+            Console.ReadLine();
+        }
+
+        static bool Exit(bool isWorking)
+        {
+            Clear();
+            isWorking = false;
+            return isWorking;
+        }
+
+        static void WriteText(string text, ConsoleColor color = ConsoleColor.Red)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = default(ConsoleColor);
+        }
+
+        static void PrintMainText(string CommandAddDossier, string CommandPrintAllDossier, string CommandDeleteDossier, string CommandExit)
+        {
+            ConsoleColor defualt = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Parameters: ");
+            Console.WriteLine($"{CommandAddDossier} --- Add a new file.");
+            Console.WriteLine($"{CommandPrintAllDossier} --- Open all files.");
+            Console.WriteLine($"{CommandDeleteDossier} --- Delete a file (search by number).");
+            Console.WriteLine($"{CommandExit} --- Quit the program.");
+            Console.ForegroundColor = default;
+            Console.Write("Write the command:");
+        }
+
+        static void Clear()
+        {
+            Console.Clear();
+        }
+    }
+}
