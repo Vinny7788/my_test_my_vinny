@@ -9,6 +9,7 @@ namespace School
         {
             Console.CursorVisible = false;
 
+            int sum  = 0;
             int maxNumberInQueue = 15;
             int minNumberInQueue = 5;
             int minSumPurchase = 5;
@@ -21,10 +22,14 @@ namespace School
 
             CreatingQueue(randomNumber, purchaseSums, maxNumberInQueue, minNumberInQueue, minSumPurchase, maxSumPurchase);
 
-            foreach (var sum in purchaseSums)
+            while (purchaseSums.Count > 0)
             {
+                sum = purchaseSums.Dequeue();
+
                 Console.SetCursorPosition(0, 4);
+
                 ChangeWordColor($"Ballance = {ballance}/ Client = {clientCounter}", ConsoleColor.Green);
+
                 Console.SetCursorPosition(0, 0);
 
                 clientCounter++;
@@ -34,7 +39,9 @@ namespace School
                 Console.ReadLine();
             }
 
+            purchaseSums.Clear();
             Console.Clear();
+
             ChangeWordColor($"Total number of servered customers: {clientCounter}\nTotal amount of issued money: {ballance}$", ConsoleColor.Blue);
         }
 
@@ -53,6 +60,7 @@ namespace School
             {
                 purchaseSums.Enqueue(randomNumber.Next(5, 25));
             }
+
         }
     }
 }
