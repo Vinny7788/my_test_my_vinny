@@ -19,6 +19,7 @@ namespace School
             {
                 Console.WriteLine(mainArray[i]);
             }
+
         }
 
         static void MergingArray(List<string> mainArray, string[] array)
@@ -27,11 +28,13 @@ namespace School
             for (int i = 0; i < array.Length; i++)
             {
 
-                if (!mainArray.Contains(array[i]))
+                if (mainArray.Contains(array[i]) == false)
                 {
                     mainArray.Add(array[i]);
                 }
+
             }
+
         }
     }
 }
