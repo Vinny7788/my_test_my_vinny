@@ -48,6 +48,7 @@ namespace School
 
         static void DeleteDossier(List<string> fullNames, List<string> positions, int delay)
         {
+            int indexNumber;
             string userInput;
             int oneSkip = 1;
 
@@ -55,14 +56,23 @@ namespace School
             WriteText("Write the file index to delete it: ", ConsoleColor.Magenta);
             userInput = Console.ReadLine();
 
-            fullNames.RemoveAt(Convert.ToInt32(userInput) - oneSkip);
-            positions.RemoveAt(Convert.ToInt32(userInput) - oneSkip);
+            if (int.TryParse(userInput, out indexNumber))
+            {
+                fullNames.RemoveAt(indexNumber - oneSkip);
+                positions.RemoveAt(indexNumber - oneSkip);
 
-            WriteText("Operation Completed!!!", ConsoleColor.Green);
-            System.Threading.Thread.Sleep(delay);
+                WriteText("Operation Completed!!!", ConsoleColor.Green);
+                System.Threading.Thread.Sleep(delay);
+            }
+            else
+            {
+                WriteText("Incorect Format",ConsoleColor.Red);
+                System.Threading.Thread.Sleep(delay);
+            }
+
         }
 
-        static void AddDossier(List<string> fullNames, List<string> position, int delay)
+        static void AddDossier(List<string> fullNames, List<string> positions, int delay)
         {
             Clear();
             string userInputFullName;
@@ -76,7 +86,7 @@ namespace School
             Clear();
 
             fullNames.Add(userInputFullName);
-            position.Add(userInputPosition);
+            positions.Add(userInputPosition);
 
             WriteText("Operation Completed!!!", ConsoleColor.Green);
             System.Threading.Thread.Sleep(delay);
@@ -89,7 +99,7 @@ namespace School
             Console.Clear();
         }
 
-        static void ShowDossier(List<string> fullNames, List<string> position)
+        static void ShowDossier(List<string> fullNames, List<string> positions)
         {
             int oneSkipping = 1;
 
@@ -97,7 +107,7 @@ namespace School
 
             for (int i = 0; i < fullNames.Count; i++)
             {
-                Console.WriteLine($"{i + oneSkipping}/ {fullNames[i]} - {position[i]}");
+                Console.WriteLine($"{i + oneSkipping}/ {fullNames[i]} - {positions[i]}");
             }
 
             Console.WriteLine("Press any key...");
