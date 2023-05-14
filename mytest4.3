@@ -19,6 +19,7 @@ namespace School
             Console.WriteLine($"You can write the number or command: /{exitProgram}/ to exit the program , /{sumWord}/ to calculate the entered numbers.  ");
 
             WriteText("Press Enter to continue", ConsoleColor.Blue);
+
             Console.ReadKey();
             Console.Clear();
 
@@ -40,6 +41,7 @@ namespace School
                     WriteText($"Sum of entered numbers = {sumNumbers}");
 
                     WriteText("Press Enter to continue", ConsoleColor.Blue);
+
                     Console.ReadKey();
                     Console.Clear();
 
@@ -50,6 +52,7 @@ namespace School
                 {
                     AdditionArray(userInput, numbers);
                 }
+
             }
         }
 
@@ -80,6 +83,7 @@ namespace School
                 Thread.Sleep(delayTime);
                 Console.Clear();
             }
+
         }
 
         static void WriteText(string text, ConsoleColor color = ConsoleColor.White)
