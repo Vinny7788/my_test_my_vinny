@@ -7,10 +7,10 @@ namespace School
     {
         static void Main(string[] args)
         {
-            const string CommandAddDossier = "1";
-            const string CommandPrintAllDossier = "2";
-            const string CommandDeleteDossier = "3";
-            const string CommandExit = "4";
+            const string CommandAddNewFile = "1";
+            const string CommandPrintAllFiles = "2";
+            const string CommandDeleteFile = "3";
+            const string CommandQuitProgram = "4";
 
             int delay = 4500;
             bool isWorking = true;
@@ -22,25 +22,25 @@ namespace School
 
             while (isWorking)
             {
-                Clear();
-                PrintMainText(CommandAddDossier, CommandPrintAllDossier, CommandDeleteDossier, CommandExit);
+                Console.Clear();
+                PrintMainText(CommandAddNewFile, CommandPrintAllFiles, CommandDeleteFile, CommandQuitProgram);
 
                 switch (Console.ReadLine())
                 {
-                    case CommandAddDossier:
+                    case CommandAddNewFile:
                         AddDossier(fullNames, positions, delay);
                         break;
 
-                    case CommandPrintAllDossier:
+                    case CommandPrintAllFiles:
                         ShowDossier(fullNames, positions);
                         break;
 
-                    case CommandDeleteDossier:
+                    case CommandDeleteFile:
                         DeleteDossier(fullNames, positions, delay);
                         break;
 
-                    case CommandExit:
-                        isWorking = Exit(isWorking);
+                    case CommandQuitProgram:
+                        isWorking = Exit();
                         break;
                 }
             }
@@ -52,29 +52,38 @@ namespace School
             string userInput;
             int oneSkip = 1;
 
-            Clear();
+            Console.Clear();
             WriteText("Write the file index to delete it: ", ConsoleColor.Magenta);
             userInput = Console.ReadLine();
 
             if (int.TryParse(userInput, out indexNumber))
             {
-                fullNames.RemoveAt(indexNumber - oneSkip);
-                positions.RemoveAt(indexNumber - oneSkip);
 
-                WriteText("Operation Completed!!!", ConsoleColor.Green);
-                System.Threading.Thread.Sleep(delay);
+                if ((indexNumber - oneSkip) > fullNames.Count || (indexNumber - oneSkip) < 0)
+                {
+                    WriteText("File not found!!!", ConsoleColor.Red);
+                    System.Threading.Thread.Sleep(delay);
+                }
+                else
+                {
+                    fullNames.RemoveAt(indexNumber - oneSkip);
+                    positions.RemoveAt(indexNumber - oneSkip);
+
+                    WriteText("Operation Completed!!!", ConsoleColor.Green);
+                    System.Threading.Thread.Sleep(delay);
+                }
+
             }
             else
             {
-                WriteText("Incorect Format",ConsoleColor.Red);
+                WriteText("Incorect Format", ConsoleColor.Red);
                 System.Threading.Thread.Sleep(delay);
             }
-
         }
 
         static void AddDossier(List<string> fullNames, List<string> positions, int delay)
         {
-            Clear();
+            Console.Clear();
             string userInputFullName;
             string userInputPosition;
 
@@ -83,7 +92,7 @@ namespace School
 
             Console.WriteLine("Write The Position");
             userInputPosition = Console.ReadLine();
-            Clear();
+            Console.Clear();
 
             fullNames.Add(userInputFullName);
             positions.Add(userInputPosition);
@@ -103,7 +112,7 @@ namespace School
         {
             int oneSkipping = 1;
 
-            Clear();
+            Console.Clear();
 
             for (int i = 0; i < fullNames.Count; i++)
             {
@@ -114,11 +123,10 @@ namespace School
             Console.ReadLine();
         }
 
-        static bool Exit(bool isWorking)
+        static bool Exit()
         {
-            Clear();
-            isWorking = false;
-            return isWorking;
+            Console.Clear();
+            return false;
         }
 
         static void WriteText(string text, ConsoleColor color = ConsoleColor.Red)
@@ -128,22 +136,16 @@ namespace School
             Console.ForegroundColor = default(ConsoleColor);
         }
 
-        static void PrintMainText(string CommandAddDossier, string CommandPrintAllDossier, string CommandDeleteDossier, string CommandExit)
+        static void PrintMainText(string CommandAddNewFile, string CommandPrintAllFiles, string CommandDeleteFile, string CommandQuitProgram)
         {
-            ConsoleColor defualt = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("Parameters: ");
-            Console.WriteLine($"{CommandAddDossier} --- Add a new file.");
-            Console.WriteLine($"{CommandPrintAllDossier} --- Open all files.");
-            Console.WriteLine($"{CommandDeleteDossier} --- Delete a file (search by number).");
-            Console.WriteLine($"{CommandExit} --- Quit the program.");
+            Console.WriteLine($"{CommandAddNewFile} --- Add a new file.");
+            Console.WriteLine($"{CommandPrintAllFiles} --- Open all files.");
+            Console.WriteLine($"{CommandDeleteFile} --- Delete a file (search by number).");
+            Console.WriteLine($"{CommandQuitProgram} --- Quit the program.");
             Console.ForegroundColor = default;
             Console.Write("Write the command:");
-        }
-
-        static void Clear()
-        {
-            Console.Clear();
         }
     }
 }
