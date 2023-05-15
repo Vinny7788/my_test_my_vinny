@@ -1,4 +1,5 @@
 using System;
+using System;
 using System.Collections.Generic;
 
 namespace School
@@ -9,34 +10,17 @@ namespace School
         {
             Console.CursorVisible = false;
 
-            int sum = 0;
-            int maxNumberInQueue = 15;
-            int minNumberInQueue = 5;
-            int minSumPurchase = 5;
-            int maxSumPurchase = 25;
             int ballance = 0;
             int clientCounter = 1;
 
             Random randomNumber = new Random();
             Queue<int> purchaseSums = new Queue<int>();
 
-            CreatingQueue(randomNumber, purchaseSums, maxNumberInQueue, minNumberInQueue, minSumPurchase, maxSumPurchase);
+            CreateQueue(randomNumber, purchaseSums);
 
             while (purchaseSums.Count > 0)
             {
-                sum = purchaseSums.Dequeue();
-
-                Console.SetCursorPosition(0, 4);
-
-                ChangeWordColor($"Ballance = {ballance}/ Client = {clientCounter}", ConsoleColor.Green);
-
-                Console.SetCursorPosition(0, 0);
-
-                clientCounter++;
-                ballance += sum;
-
-                Console.WriteLine($"The total purchase amount of the customer = {sum}");
-                Console.ReadLine();
+                OperateStore(purchaseSums, ref ballance, ref clientCounter);
             }
 
             purchaseSums.Clear();
@@ -53,12 +37,34 @@ namespace School
             Console.ForegroundColor = defaultColor;
         }
 
-        static void CreatingQueue(Random randomNumber, Queue<int> purchaseSums, int maxNumberInQueue, int minNumberInQueue, int minSumPurchase, int maxSumPurchase)
+        static void CreateQueue(Random randomNumber, Queue<int> purchaseSums)
         {
+            int maxNumberInQueue = 15;
+            int minNumberInQueue = 5;
+            int minSumPurchase = 5;
+            int maxSumPurchase = 25;
+
             for (int i = 0; i < randomNumber.Next(minNumberInQueue, maxNumberInQueue); i++)
             {
-                purchaseSums.Enqueue(randomNumber.Next(5, 25));
+                purchaseSums.Enqueue(randomNumber.Next(minSumPurchase, maxSumPurchase));
             }
+        }
+
+        static void OperateStore(Queue<int> purchaseSums, ref int ballance, ref int clientCounter)
+        {
+            int priceOnePurchase;
+
+            priceOnePurchase = purchaseSums.Dequeue();
+
+            Console.SetCursorPosition(0, 4);
+            ChangeWordColor($"Ballance = {ballance}/ Client = {clientCounter}", ConsoleColor.Green);
+            Console.SetCursorPosition(0, 0);
+
+            clientCounter++;
+            ballance += priceOnePurchase;
+
+            Console.WriteLine($"The total purchase amount of the customer = {priceOnePurchase}");
+            Console.ReadLine();
         }
     }
 }
