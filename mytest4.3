@@ -10,7 +10,6 @@ namespace School
         {
             List<int> numbers = new List<int>();
 
-            int sumNumbers = 0;
             string exitProgram = "exit";
             string sumWord = "sum";
             string userInput;
@@ -27,32 +26,7 @@ namespace School
             {
                 userInput = ReqestNumber(out userInput);
 
-                if (userInput.ToLower() == exitProgram.ToLower())
-                {
-                    Console.Clear();
-                    Console.WriteLine("Goodbye!!!");
-
-                    isWork = false;
-                }
-                else if (userInput.ToLower() == sumWord.ToLower())
-                {
-                    sumNumbers = CountNumbers(numbers, sumNumbers);
-
-                    WriteText($"Sum of entered numbers = {sumNumbers}");
-
-                    WriteText("Press Enter to continue", ConsoleColor.Blue);
-
-                    Console.ReadKey();
-                    Console.Clear();
-
-                    sumNumbers = 0;
-                    numbers.Clear();
-                }
-                else
-                {
-                    AdditionArray(userInput, numbers);
-                }
-
+                ProcesProgram(userInput, ref isWork, exitProgram, sumWord, numbers);
             }
         }
 
@@ -101,5 +75,37 @@ namespace School
             Console.Clear();
             return userInput;
         }
+
+        static void ProcesProgram(string userInput, ref bool isWork, string exitProgram, string sumWord, List<int> numbers)
+        {
+            int sumNumbers = 0;
+
+            if (userInput.ToLower() == exitProgram.ToLower())
+            {
+                Console.Clear();
+                Console.WriteLine("Goodbye!!!");
+
+                isWork = false;
+            }
+            else if (userInput.ToLower() == sumWord.ToLower())
+            {
+                sumNumbers = CountNumbers(numbers, sumNumbers);
+
+                WriteText($"Sum of entered numbers = {sumNumbers}");
+
+                WriteText("Press Enter to continue", ConsoleColor.Blue);
+
+                Console.ReadKey();
+                Console.Clear();
+
+                sumNumbers = 0;
+                numbers.Clear();
+            }
+            else
+            {
+                AdditionArray(userInput, numbers);
+            }
+        }
     }
 }
+
