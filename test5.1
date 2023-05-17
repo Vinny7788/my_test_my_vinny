@@ -11,7 +11,7 @@ namespace School
 
             Console.CursorVisible = false;
 
-            map.DrawPlayer(player.X, player.Y, '$');
+            map.DrawPlayer(player.X, player.Y,player.GetChar());
 
             Console.ReadKey(true);
         }
@@ -28,6 +28,8 @@ namespace School
 
     class Player
     {
+        private char _playerChar = '$';
+
         public int X { get; private set; }
         public int Y { get; private set; }
 
@@ -36,5 +38,12 @@ namespace School
             X = x;
             Y = y;
         }
+
+        public char GetChar()
+        {
+            char playerChar = _playerChar;
+            return playerChar;
+        }
     }
 }
+
