@@ -1,0 +1,33 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Player player1 = new Player("Max", 25, 77634);
+
+            player1.ShowInfo();
+        }
+    }
+
+    class Player
+    {
+        private string _name;
+        private int _age;
+        private int _id;
+
+        public Player(string name, int age, int id)
+        {
+            _name = name;
+            _age = age;
+            _id = id;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Name :{_name}\nAge :{_age}\nID :{_id}");
+        }
+    }
+}
