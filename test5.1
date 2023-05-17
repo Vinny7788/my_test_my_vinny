@@ -1,0 +1,40 @@
+using System;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Map map = new Map();
+            Player player = new Player(10, 15);
+
+            Console.CursorVisible = false;
+
+            map.DrawPlayer(player.X, player.Y, '$');
+
+            Console.ReadKey(true);
+        }
+    }
+
+    class Map
+    {
+        public void DrawPlayer(int x, int y, char player)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.WriteLine(player);
+        }
+    }
+
+    class Player
+    {
+        public int X { get; private set; }
+        public int Y { get; private set; }
+
+        public Player(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+}
