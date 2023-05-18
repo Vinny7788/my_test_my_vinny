@@ -7,11 +7,11 @@ namespace School
         static void Main(string[] args)
         {
             Rander map = new Rander();
-            Player player = new Player(10, 15);
+            Player player = new Player(10, 15, '$');
 
             Console.CursorVisible = false;
 
-            map.DrawPlayer(player.positionX, player.positionY,player.symbol);
+            map.DrawPlayer(player);
 
             Console.ReadKey(true);
         }
@@ -19,10 +19,10 @@ namespace School
 
     class Rander
     {
-        public void DrawPlayer(int x, int y, char player)
+        public void DrawPlayer(Player player)
         {
-            Console.SetCursorPosition(x, y);
-            Console.WriteLine(player);
+            Console.SetCursorPosition(player.positionX,player.positionY);
+            Console.WriteLine(player.symbol);
         }
     }
 
@@ -30,20 +30,13 @@ namespace School
     {
         public int positionX { get; private set; }
         public int positionY { get; private set; }
+        public char symbol { get; private set; }
 
-        public Player(int x, int y)
+        public Player(int setPositionX, int setPositionY, char symbolSet)
         {
-            positionX = x;
-            positionY = y;
-        }
-        private char _symbol = '$';
-
-        public char symbol
-        {
-            get
-            {
-                return _symbol;
-            }
+            positionX = setPositionX;
+            positionY = setPositionY;
+            symbol = symbolSet;
         }
     }
 }
