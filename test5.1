@@ -6,18 +6,18 @@ namespace School
     {
         static void Main(string[] args)
         {
-            Map map = new Map();
+            Rander map = new Rander();
             Player player = new Player(10, 15);
 
             Console.CursorVisible = false;
 
-            map.DrawPlayer(player.X, player.Y,player.GetChar());
+            map.DrawPlayer(player.positionX, player.positionY,player.symbol);
 
             Console.ReadKey(true);
         }
     }
 
-    class Map
+    class Rander
     {
         public void DrawPlayer(int x, int y, char player)
         {
@@ -28,21 +28,22 @@ namespace School
 
     class Player
     {
-        private char _playerChar = '$';
-
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public int positionX { get; private set; }
+        public int positionY { get; private set; }
 
         public Player(int x, int y)
         {
-            X = x;
-            Y = y;
+            positionX = x;
+            positionY = y;
         }
+        private char _symbol = '$';
 
-        public char GetChar()
+        public char symbol
         {
-            char playerChar = _playerChar;
-            return playerChar;
+            get
+            {
+                return _symbol;
+            }
         }
     }
 }
