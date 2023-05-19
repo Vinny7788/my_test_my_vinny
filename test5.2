@@ -204,8 +204,6 @@ namespace School
 
     class Player
     {
-        public int Level { get; private set; }
-        public string NickName { get; private set; }
         public bool Ban;
 
         public Player(string nickName, int level)
@@ -214,5 +212,8 @@ namespace School
             NickName = nickName;
             PlayersBase.AllPlayers.Add(this);
         }
+
+        public int Level { get; private set; }
+        public string NickName { get; private set; }
     }
 }
