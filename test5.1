@@ -21,23 +21,23 @@ namespace School
     {
         public void DrawPlayer(Player player)
         {
-            Console.SetCursorPosition(player.positionX,player.positionY);
-            Console.WriteLine(player.symbol);
+            Console.SetCursorPosition(player.PositionX, player.PositionY);
+            Console.WriteLine(player.Symbol);
         }
     }
 
     class Player
     {
-        public int positionX { get; private set; }
-        public int positionY { get; private set; }
-        public char symbol { get; private set; }
-
         public Player(int setPositionX, int setPositionY, char symbolSet)
         {
-            positionX = setPositionX;
-            positionY = setPositionY;
-            symbol = symbolSet;
+            PositionX = setPositionX;
+            PositionY = setPositionY;
+            Symbol = symbolSet;
         }
+
+        public int PositionX { get; private set; }
+        public int PositionY { get; private set; }
+        public char Symbol { get; private set; }
     }
 }
 
