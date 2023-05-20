@@ -1,0 +1,214 @@
+using System;
+using System.Collections.Generic;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string CommandTakeCard = "1";
+            const string CommandShowMyCards = "2";
+            const string CommandRestar = "3";
+            const string CommandShowAllCards = "4";
+            const string CommandExit = "5";
+
+            bool isWork = true;
+            string userInput;
+
+            MainText mainText = new MainText();
+            Player player = new Player();
+            DeckCard deck = new DeckCard();
+
+            deck.AddCards();
+
+            while (isWork)
+            {
+                Console.Clear();
+
+                mainText.WriteCommandText();
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case CommandTakeCard:
+                        player.TakeCards(deck);
+                        break;
+
+                    case CommandShowMyCards:
+                        player.ShowPlayerCards();
+                        Console.ReadLine();
+                        break;
+
+                    case CommandRestar:
+                        deck.RestarDeckCard();
+                        player.DeletePlayerCards();
+                        break;
+
+                    case CommandShowAllCards:
+                        deck.ShowAllCards();
+                        Console.ReadLine();
+                        break;
+
+                    case CommandExit:
+                        isWork = false;
+                        break;
+                }
+            }
+        }
+    }
+
+    class Card
+    {
+        public string CardNumber { get; private set; }
+        public string Suit { get; private set; }
+
+        public Card(string cardNumber, string suit, DeckCard deck)
+        {
+            CardNumber = cardNumber;
+            Suit = suit;
+            deck.Cards.Add(this);
+        }
+    }
+
+    class DeckCard
+    {
+        public List<Card> Cards = new List<Card>();
+
+        private Random _random = new Random();
+
+        public void AddCards()
+        {
+            int unaccountedNumber = 1;
+            int numberSuits = 4;
+            int maxNumberDeck = 10;
+            int minNumberDeck = 6;
+            int maxCardInDeck = 14;
+
+            for (int i = 1; i < (numberSuits + unaccountedNumber); i++)
+            {
+
+                for (int j = minNumberDeck; j < (maxCardInDeck + unaccountedNumber); j++)
+                {
+
+                    if (j < maxNumberDeck)
+                    {
+                        string cardNumber = Convert.ToString(j);
+                        string suite = Convert.ToString((Suits)i);
+                        new Card(cardNumber, suite, this);
+                    }
+                    else
+                    {
+                        string cardNumber = Convert.ToString((Spades)j);
+                        string suite = Convert.ToString((Suits)i);
+                        new Card(cardNumber, suite, this);
+                    }
+
+                }
+            }
+        }
+
+        public void ShowAllCards()
+        {
+
+            for (int i = 0; i < Cards.Count; i++)
+            {
+                Console.WriteLine($"{Cards[i].CardNumber} / {Cards[i].Suit}\n");
+            }
+
+            Console.WriteLine();
+        }
+
+        public Card DrawCard()
+        {
+
+            if (Cards.Count > 0)
+            {
+                int RandomIndex = _random.Next(Cards.Count);
+
+                Card card = Cards[RandomIndex];
+                Cards.RemoveAt(RandomIndex);
+                return card;
+            }
+
+            return null;
+        }
+
+        public void RestarDeckCard()
+        {
+            Cards.Clear();
+            AddCards();
+        }
+    }
+
+    class Player
+    {
+        private List<Card> PlayerCard = new List<Card>();
+
+        public void TakeCards(DeckCard deck)
+        {
+            Card card = deck.DrawCard();
+
+            if (card != null)
+            {
+                PlayerCard.Add(card);
+            }
+        }
+
+        public void ShowPlayerCards()
+        {
+
+            for (int i = 0; i < PlayerCard.Count; i++)
+            {
+                Console.WriteLine($"{PlayerCard[i].CardNumber} / {PlayerCard[i].Suit}\n");
+            }
+        }
+
+        public void DeletePlayerCards()
+        {
+            PlayerCard.Clear();
+        }
+    }
+
+    class MainText
+    {
+        public void WriteText(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            ConsoleColor defualt = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defualt;
+        }
+
+        public void WriteCommandText()
+        {
+            const string CommandTakeCard = "1";
+            const string CommandShowMyCards = "2";
+            const string CommandRestar = "3";
+            const string CommandShowAllCards = "4";
+            const string CommandExit = "5";
+
+            WriteText($"{CommandTakeCard} - To take card", ConsoleColor.Cyan);
+            WriteText($"{CommandShowMyCards} - To view your cards", ConsoleColor.Cyan);
+            WriteText($"{CommandRestar} - To reshuffle the cards", ConsoleColor.Cyan);
+            WriteText($"{CommandShowAllCards} - To see all cards", ConsoleColor.Cyan);
+            WriteText($"{CommandExit} - To exit", ConsoleColor.Cyan);
+        }
+    }
+
+    enum Suits
+    {
+        Heart = 1,
+        Dimond,
+        Club,
+        Spades,
+    }
+    enum Spades
+    {
+        V = 11,
+        Q,
+        K,
+        A,
+    }
+}
