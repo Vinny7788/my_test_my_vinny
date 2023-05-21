@@ -20,7 +20,7 @@ namespace School
             Player player = new Player();
             DeckCard deck = new DeckCard();
 
-            deck.AddCards();
+            deck.StartProgram();
 
             while (isWork)
             {
@@ -33,7 +33,7 @@ namespace School
                 switch (userInput)
                 {
                     case CommandTakeCard:
-                        player.TakeCards(deck);
+                        deck.GiveCard(player);
                         break;
 
                     case CommandShowMyCards:
@@ -61,32 +61,31 @@ namespace School
 
     class Card
     {
-        public string CardNumber { get; private set; }
-        public string Suit { get; private set; }
-
-        public Card(string cardNumber, string suit, DeckCard deck)
+        public Card(string cardNumber, string suit)
         {
             CardNumber = cardNumber;
             Suit = suit;
-            deck.Cards.Add(this);
         }
+
+        public string CardNumber { get; private set; }
+        public string Suit { get; private set; }
     }
 
     class DeckCard
     {
-        public List<Card> Cards = new List<Card>();
+        private List<Card> _cards = new List<Card>();
 
         private Random _random = new Random();
 
-        public void AddCards()
+        private void AddCards()
         {
             int unaccountedNumber = 1;
-            int numberSuits = 4;
+            int numberSuits = Enum.GetValues(typeof(Suits)).Length; ;
             int maxNumberDeck = 10;
             int minNumberDeck = 6;
             int maxCardInDeck = 14;
 
-            for (int i = 1; i < (numberSuits + unaccountedNumber); i++)
+            for (int i = 0; i < numberSuits; i++)
             {
 
                 for (int j = minNumberDeck; j < (maxCardInDeck + unaccountedNumber); j++)
@@ -96,15 +95,14 @@ namespace School
                     {
                         string cardNumber = Convert.ToString(j);
                         string suite = Convert.ToString((Suits)i);
-                        new Card(cardNumber, suite, this);
+                        _cards.Add(new Card(cardNumber, suite));
                     }
                     else
                     {
-                        string cardNumber = Convert.ToString((Spades)j);
+                        string cardNumber = Convert.ToString((FaceCards)j);
                         string suite = Convert.ToString((Suits)i);
-                        new Card(cardNumber, suite, this);
+                        _cards.Add(new Card(cardNumber, suite));
                     }
-
                 }
             }
         }
@@ -112,23 +110,23 @@ namespace School
         public void ShowAllCards()
         {
 
-            for (int i = 0; i < Cards.Count; i++)
+            for (int i = 0; i < _cards.Count; i++)
             {
-                Console.WriteLine($"{Cards[i].CardNumber} / {Cards[i].Suit}\n");
+                Console.WriteLine($"{_cards[i].CardNumber} / {_cards[i].Suit}\n");
             }
 
             Console.WriteLine();
         }
 
-        public Card DrawCard()
+        private Card DrawCard()
         {
 
-            if (Cards.Count > 0)
+            if (_cards.Count > 0)
             {
-                int RandomIndex = _random.Next(Cards.Count);
+                int RandomCard = _random.Next(_cards.Count);
 
-                Card card = Cards[RandomIndex];
-                Cards.RemoveAt(RandomIndex);
+                Card card = _cards[RandomCard];
+                _cards.RemoveAt(RandomCard);
                 return card;
             }
 
@@ -137,37 +135,47 @@ namespace School
 
         public void RestarDeckCard()
         {
-            Cards.Clear();
+            _cards.Clear();
             AddCards();
+        }
+
+        public void StartProgram()
+        {
+            AddCards();
+        }
+
+        public void GiveCard(Player player)
+        {
+            Card card = DrawCard();
+
+            if (card != null)
+            {
+                player.TakeCard(card);
+            }
         }
     }
 
     class Player
     {
-        private List<Card> PlayerCard = new List<Card>();
-
-        public void TakeCards(DeckCard deck)
-        {
-            Card card = deck.DrawCard();
-
-            if (card != null)
-            {
-                PlayerCard.Add(card);
-            }
-        }
+        private List<Card> PlayerCards = new List<Card>();
 
         public void ShowPlayerCards()
         {
 
-            for (int i = 0; i < PlayerCard.Count; i++)
+            for (int i = 0; i < PlayerCards.Count; i++)
             {
-                Console.WriteLine($"{PlayerCard[i].CardNumber} / {PlayerCard[i].Suit}\n");
+                Console.WriteLine($"{PlayerCards[i].CardNumber} / {PlayerCards[i].Suit}\n");
             }
         }
 
         public void DeletePlayerCards()
         {
-            PlayerCard.Clear();
+            PlayerCards.Clear();
+        }
+
+        public void TakeCard(Card card)
+        {
+            PlayerCards.Add(card);
         }
     }
 
@@ -199,12 +207,12 @@ namespace School
 
     enum Suits
     {
-        Heart = 1,
+        Heart = 0,
         Dimond,
         Club,
         Spades,
     }
-    enum Spades
+    enum FaceCards
     {
         V = 11,
         Q,
