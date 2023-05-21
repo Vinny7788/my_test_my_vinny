@@ -8,8 +8,8 @@ namespace School
     {
         static void Main(string[] args)
         {
+            Console.CursorVisible = false;
             PlayersBase playersBase = new PlayersBase();
-            Player player = new Player("Thomas", 5);
 
             const string CommandOpenBase = "1";
             const string CommandCloseConsole = "2";
@@ -26,7 +26,7 @@ namespace School
                 switch (userInput)
                 {
                     case CommandOpenBase:
-                        playersBase.Work(playersBase);
+                        playersBase.Work();
                         break;
 
                     case CommandCloseConsole:
@@ -40,31 +40,39 @@ namespace School
 
     class PlayersBase
     {
-        private const string _commandAddPlayer = "1";
-        private const string _commandBanUnban = "2";
-        private const string _commandDeletePlayer = "3";
-        private const string _commandTerminateProgram = "4";
+        public int uniqueId { get; private set; }
 
-        private int _sleepTime = 2000;
+        private int _sleepOneSecond = 1000;
+        private int _sleepTwoSecond = 2000;
         private bool _isWork;
 
-        public static List<Player> AllPlayers { get; private set; } = new List<Player>();
+        public List<Player> AllPlayers { get; private set; } = new List<Player>();
 
-        public void Work(PlayersBase playersBase)
+        public void Work()
         {
-            playersBase._isWork = true;
+            const string _commandAddPlayer = "1";
+            const string _commandBanUnban = "2";
+            const string _commandDeletePlayer = "3";
+            const string _commandSerchPlayer = "4";
+            const string _commandTerminateProgram = "5";
+
+            _isWork = true;
 
             Console.Clear();
 
-            while (playersBase._isWork)
+            while (_isWork)
             {
                 string userInput;
 
                 Console.SetCursorPosition(0, 15);
-                playersBase._ShowAllPlayers(playersBase);
+                ShowAllPlayers();
                 Console.SetCursorPosition(0, 0);
 
-                _ShowInformation();
+                WriteText($"{_commandAddPlayer} - To add a new player.", ConsoleColor.Yellow);
+                WriteText($"{_commandBanUnban} - To ban or unban a player.", ConsoleColor.Yellow);
+                WriteText($"{_commandDeletePlayer} - To delete player.", ConsoleColor.Yellow);
+                WriteText($"{_commandSerchPlayer} - To serch the player.", ConsoleColor.Yellow);
+                WriteText($"{_commandTerminateProgram} - To terminate the program.", ConsoleColor.Yellow);
 
                 userInput = Console.ReadLine();
                 Console.Clear();
@@ -72,19 +80,23 @@ namespace School
                 switch (userInput)
                 {
                     case _commandAddPlayer:
-                        _AddPlayer();
+                        AddNewPlayer();
                         break;
 
                     case _commandBanUnban:
-                        _Ban();
+                        Ban();
                         break;
 
                     case _commandDeletePlayer:
-                        _DeletePlayer();
+                        DeletePlayer();
+                        break;
+
+                    case _commandSerchPlayer:
+                        SerchPlayer();
                         break;
 
                     case _commandTerminateProgram:
-                        playersBase._isWork = false;
+                        _isWork = false;
                         break;
                 }
             }
@@ -97,63 +109,7 @@ namespace School
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        private void _Ban()
-        {
-            string userInput;
-
-            Console.Write("Write Player ID: ");
-            userInput = Console.ReadLine();
-
-            if (Int32.TryParse(userInput, out int id) && id < AllPlayers.Count)
-            {
-
-                if (AllPlayers[id].Ban)
-                {
-                    AllPlayers[id].Ban = false;
-                }
-                else
-                {
-                    AllPlayers[id].Ban = true;
-                }
-
-                WriteText("Operation Complete", ConsoleColor.Green);
-                Thread.Sleep(_sleepTime);
-                Console.Clear();
-            }
-            else
-            {
-                WriteText("ID not found!", ConsoleColor.Red);
-                Thread.Sleep(_sleepTime);
-                Console.Clear();
-            }
-        }
-
-        private void _AddPlayer()
-        {
-            string userInput;
-            int userInputLevel;
-
-            Console.Write("Write the Nickname :");
-            userInput = Console.ReadLine();
-
-            Console.Write("Write the level :");
-
-            if (int.TryParse(Console.ReadLine(), out int userLevel))
-            {
-                userInputLevel = userLevel;
-
-                Player player = new Player(userInput, userInputLevel);
-                Console.Clear();
-            }
-            else
-            {
-                WriteText("Invalid level format", ConsoleColor.Red);
-                Thread.Sleep(_sleepTime);
-                Console.Clear();
-            }
-        }
-
-        private void _DeletePlayer()
+        private void DeletePlayer()
         {
             int userIdInput;
 
@@ -166,53 +122,159 @@ namespace School
             else
             {
                 WriteText("Invalid format", ConsoleColor.Red);
-                Thread.Sleep(_sleepTime);
+                Thread.Sleep(_sleepTwoSecond);
             }
         }
 
-        private void _ShowAllPlayers(PlayersBase playersBase)
+        private void ShowAllPlayers()
         {
 
             for (int i = 0; i < AllPlayers.Count; i++)
             {
-                Console.Write($"Nickname - {PlayersBase.AllPlayers[i].NickName} / id - {i} / level - {PlayersBase.AllPlayers[i].Level} / Ban status - ");
-                _ShowBunInformation(i);
+                Console.Write($"Nickname - {AllPlayers[i].NickName} / id - {AllPlayers[i].Id} / level - {AllPlayers[i].Level} / Ban status - ");
+                ShowBunInformation(i);
             }
         }
 
-        private void _ShowInformation()
-        {
-            WriteText($"{_commandAddPlayer} - To add a new player.", ConsoleColor.Yellow);
-            WriteText($"{_commandBanUnban} - To ban or unban a player.", ConsoleColor.Yellow);
-            WriteText($"{_commandDeletePlayer} - To delete player.", ConsoleColor.Yellow);
-            WriteText($"{_commandTerminateProgram} - To terminate the program.", ConsoleColor.Yellow);
-        }
-
-        private void _ShowBunInformation(int index)
+        private void ShowBunInformation(int index)
         {
 
-            if (PlayersBase.AllPlayers[index].Ban == true)
+            if (AllPlayers[index].Ban == true)
             {
-                WriteText(Convert.ToString(PlayersBase.AllPlayers[index].Ban), ConsoleColor.Red);
+                WriteText(Convert.ToString(AllPlayers[index].Ban), ConsoleColor.Red);
             }
             else
             {
-                WriteText(Convert.ToString(PlayersBase.AllPlayers[index].Ban), ConsoleColor.Green);
+                WriteText(Convert.ToString(AllPlayers[index].Ban), ConsoleColor.Green);
             }
         }
+
+        private void AddNewPlayer()
+        {
+            string userInput;
+            Console.Write("Write the Nickname : ");
+            userInput = Console.ReadLine();
+
+            AllPlayers.Add(new Player(userInput, IdGenerator()));
+            Console.Clear();
+        }
+
+        private int IdGenerator()
+        {
+            Random random = new Random();
+            int idModificator = 8900;
+            uniqueId++;
+            return idModificator + uniqueId;
+        }
+
+        private void Ban()
+        {
+            string userInput;
+
+            Console.Write("Write Player ID: ");
+            userInput = (Console.ReadLine());
+
+            if (Int32.TryParse(userInput, out int id) && id >= 0 && id <= FindLastId())
+            {
+                int index = AllPlayers.FindIndex(player => player.Id == id);
+
+                if (AllPlayers[index].Ban)
+                {
+                    AllPlayers[index].Ban = false;
+
+                }
+                else
+                {
+                    AllPlayers[index].Ban = true;
+
+                }
+
+                WriteText("Operation Complete", ConsoleColor.Green);
+                Thread.Sleep(_sleepTwoSecond);
+                Console.Clear();
+            }
+            else
+            {
+                WriteText("ID not found!", ConsoleColor.Red);
+                Thread.Sleep(_sleepTwoSecond);
+                Console.Clear();
+            }
+        }
+
+        private void SerchPlayer()
+        {
+            string userInput;
+
+            Console.Write("Enter ID to search a Player :");
+            userInput = Console.ReadLine();
+
+            if (Int32.TryParse(userInput, out int id))
+            {
+                int index = (AllPlayers.FindIndex(player => player.Id == id));
+
+                if (index != -1)
+                {
+                    Console.Clear();
+
+                    WriteText($"Player with ID - /{id}/ Found", ConsoleColor.Green);
+                    Console.Write($"Nickname - {AllPlayers[index].NickName} / id - {AllPlayers[index].Id} / level - {AllPlayers[index].Level} / Ban status - ");
+                    ShowBunInformation(index);
+
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                else
+                {
+                    Console.Clear();
+
+                    WriteText($"Player with ID - /{id}/ not Found\n", ConsoleColor.Red);
+
+                    Thread.Sleep(_sleepTwoSecond);
+                    Console.Clear();
+                }
+
+            }
+            else
+            {
+                Console.Clear();
+
+                WriteText("Invalid foramt", ConsoleColor.Red);
+
+                Thread.Sleep(_sleepOneSecond);
+
+            }
+        }
+
+        private int FindLastId()
+        {
+            int maxId = 0;
+
+            for (int i = 0; i < AllPlayers.Count; i++)
+            {
+
+                if (AllPlayers[i].Id > maxId)
+                {
+                    maxId = AllPlayers[i].Id;
+                }
+            }
+            return maxId;
+        }
     }
+
 
     class Player
     {
         public bool Ban;
 
-        public Player(string nickName, int level)
+        public Player(string nickName, int id)
         {
-            Level = level;
             NickName = nickName;
-            PlayersBase.AllPlayers.Add(this);
+            Id = id;
+            Ban = false;
+            Level = 1;
         }
 
+        public int Id { get; private set; }
         public int Level { get; private set; }
         public string NickName { get; private set; }
     }
