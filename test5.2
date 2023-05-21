@@ -40,21 +40,21 @@ namespace School
 
     class PlayersBase
     {
-        public int uniqueId { get; private set; }
+        public int UniqueId { get; private set; }
 
         private int _sleepOneSecond = 1000;
         private int _sleepTwoSecond = 2000;
         private bool _isWork;
 
-        public List<Player> AllPlayers { get; private set; } = new List<Player>();
+        private List<Player> AllPlayers = new List<Player>();
 
         public void Work()
         {
-            const string _commandAddPlayer = "1";
-            const string _commandBanUnban = "2";
-            const string _commandDeletePlayer = "3";
-            const string _commandSerchPlayer = "4";
-            const string _commandTerminateProgram = "5";
+            const string CommandAddPlayer = "1";
+            const string CommandBanUnban = "2";
+            const string CommandDeletePlayer = "3";
+            const string CommandSerchPlayer = "4";
+            const string CommandTerminateProgram = "5";
 
             _isWork = true;
 
@@ -68,34 +68,34 @@ namespace School
                 ShowAllPlayers();
                 Console.SetCursorPosition(0, 0);
 
-                WriteText($"{_commandAddPlayer} - To add a new player.", ConsoleColor.Yellow);
-                WriteText($"{_commandBanUnban} - To ban or unban a player.", ConsoleColor.Yellow);
-                WriteText($"{_commandDeletePlayer} - To delete player.", ConsoleColor.Yellow);
-                WriteText($"{_commandSerchPlayer} - To serch the player.", ConsoleColor.Yellow);
-                WriteText($"{_commandTerminateProgram} - To terminate the program.", ConsoleColor.Yellow);
+                WriteText($"{CommandAddPlayer} - To add a new player.", ConsoleColor.Yellow);
+                WriteText($"{CommandBanUnban} - To ban or unban a player.", ConsoleColor.Yellow);
+                WriteText($"{CommandDeletePlayer} - To delete player.", ConsoleColor.Yellow);
+                WriteText($"{CommandSerchPlayer} - To serch the player.", ConsoleColor.Yellow);
+                WriteText($"{CommandTerminateProgram} - To terminate the program.", ConsoleColor.Yellow);
 
                 userInput = Console.ReadLine();
                 Console.Clear();
 
                 switch (userInput)
                 {
-                    case _commandAddPlayer:
+                    case CommandAddPlayer:
                         AddNewPlayer();
                         break;
 
-                    case _commandBanUnban:
-                        Ban();
+                    case CommandBanUnban:
+                        BanPlayer();
                         break;
 
-                    case _commandDeletePlayer:
+                    case CommandDeletePlayer:
                         DeletePlayer();
                         break;
 
-                    case _commandSerchPlayer:
+                    case CommandSerchPlayer:
                         SerchPlayer();
                         break;
 
-                    case _commandTerminateProgram:
+                    case CommandTerminateProgram:
                         _isWork = false;
                         break;
                 }
@@ -155,24 +155,24 @@ namespace School
             Console.Write("Write the Nickname : ");
             userInput = Console.ReadLine();
 
-            AllPlayers.Add(new Player(userInput, IdGenerator()));
+            AllPlayers.Add(new Player(userInput, IdGeneration()));
             Console.Clear();
         }
 
-        private int IdGenerator()
+        private int IdGeneration()
         {
             Random random = new Random();
             int idModificator = 8900;
-            uniqueId++;
-            return idModificator + uniqueId;
+            UniqueId++;
+            return idModificator + UniqueId;
         }
 
-        private void Ban()
+        private void BanPlayer()
         {
             string userInput;
 
             Console.Write("Write Player ID: ");
-            userInput = (Console.ReadLine());
+            userInput = Console.ReadLine();
 
             if (Int32.TryParse(userInput, out int id) && id >= 0 && id <= FindLastId())
             {
@@ -180,13 +180,11 @@ namespace School
 
                 if (AllPlayers[index].Ban)
                 {
-                    AllPlayers[index].Ban = false;
-
+                    AllPlayers[index].ChangeBanStatus(false);
                 }
                 else
                 {
-                    AllPlayers[index].Ban = true;
-
+                    AllPlayers[index].ChangeBanStatus(true);
                 }
 
                 WriteText("Operation Complete", ConsoleColor.Green);
@@ -264,7 +262,7 @@ namespace School
 
     class Player
     {
-        public bool Ban;
+        private bool _ban;
 
         public Player(string nickName, int id)
         {
@@ -277,5 +275,11 @@ namespace School
         public int Id { get; private set; }
         public int Level { get; private set; }
         public string NickName { get; private set; }
+        public bool Ban { get; private set; }
+
+        public bool ChangeBanStatus(bool BanStatus)
+        {
+           return Ban = BanStatus;
+        }        
     }
 }
