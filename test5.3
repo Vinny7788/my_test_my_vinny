@@ -20,7 +20,7 @@ namespace School
             Player player = new Player();
             DeckCard deck = new DeckCard();
 
-            deck.StartProgram();
+            deck.PreparingCards();
 
             while (isWork)
             {
@@ -38,17 +38,14 @@ namespace School
 
                     case CommandShowMyCards:
                         player.ShowPlayerCards();
-                        Console.ReadLine();
                         break;
 
                     case CommandRestar:
-                        deck.RestarDeckCard();
-                        player.DeletePlayerCards();
+                        deck.RestarDeckCard(player);
                         break;
 
                     case CommandShowAllCards:
                         deck.ShowAllCards();
-                        Console.ReadLine();
                         break;
 
                     case CommandExit:
@@ -73,39 +70,11 @@ namespace School
 
     class DeckCard
     {
+        private string[] _suits = new string[] { "♠", "♣", "♦", "♥" };
+
+        private string[] _cards1 = new string[] { "6", "7", "8", "9", "10", "V", "Q", "K", "A" };
+
         private List<Card> _cards = new List<Card>();
-
-        private Random _random = new Random();
-
-        private void AddCards()
-        {
-            int unaccountedNumber = 1;
-            int numberSuits = Enum.GetValues(typeof(Suits)).Length; ;
-            int maxNumberDeck = 10;
-            int minNumberDeck = 6;
-            int maxCardInDeck = 14;
-
-            for (int i = 0; i < numberSuits; i++)
-            {
-
-                for (int j = minNumberDeck; j < (maxCardInDeck + unaccountedNumber); j++)
-                {
-
-                    if (j < maxNumberDeck)
-                    {
-                        string cardNumber = Convert.ToString(j);
-                        string suite = Convert.ToString((Suits)i);
-                        _cards.Add(new Card(cardNumber, suite));
-                    }
-                    else
-                    {
-                        string cardNumber = Convert.ToString((FaceCards)j);
-                        string suite = Convert.ToString((Suits)i);
-                        _cards.Add(new Card(cardNumber, suite));
-                    }
-                }
-            }
-        }
 
         public void ShowAllCards()
         {
@@ -115,43 +84,74 @@ namespace School
                 Console.WriteLine($"{_cards[i].CardNumber} / {_cards[i].Suit}\n");
             }
 
-            Console.WriteLine();
+            Console.ReadLine();
         }
 
-        private Card DrawCard()
-        {
-
-            if (_cards.Count > 0)
-            {
-                int RandomCard = _random.Next(_cards.Count);
-
-                Card card = _cards[RandomCard];
-                _cards.RemoveAt(RandomCard);
-                return card;
-            }
-
-            return null;
-        }
-
-        public void RestarDeckCard()
-        {
+        public void RestarDeckCard(Player player)
+        {           
+            player.DeletePlayerCards();
             _cards.Clear();
             AddCards();
+            ShuffleDeck(_cards);
         }
 
-        public void StartProgram()
+        public void PreparingCards()
         {
             AddCards();
+            ShuffleDeck(_cards);
         }
 
         public void GiveCard(Player player)
         {
-            Card card = DrawCard();
+            Card card = GetCard();
 
             if (card != null)
             {
                 player.TakeCard(card);
             }
+        }
+
+        public void ShuffleDeck<cards>(List<cards> _cards)
+        {
+            Random random = new Random();
+            int i = _cards.Count;
+
+            while (i > 1)
+            {
+                i--;
+                int randomNumber = random.Next(i + 1);
+                cards value = _cards[randomNumber];
+                _cards[randomNumber] = _cards[i];
+                _cards[i] = value;
+            }
+        }
+
+        private void AddCards()
+        {
+
+            for (int i = 0; i < _suits.Length; i++)
+            {
+
+                for (int j = 0; j < _cards1.Length; j++)
+                {
+                    _cards.Add(new Card(_cards1[j], _suits[i]));
+                }
+            }
+        }
+
+        private Card GetCard()
+        {
+
+            if (_cards.Count > 0)
+            {
+                int firstCard = 0;
+
+                Card card = _cards[firstCard];
+                _cards.Remove(card);
+                return card;
+            }
+
+            return null;
         }
     }
 
@@ -166,6 +166,8 @@ namespace School
             {
                 Console.WriteLine($"{PlayerCards[i].CardNumber} / {PlayerCards[i].Suit}\n");
             }
+
+            Console.ReadLine();
         }
 
         public void DeletePlayerCards()
@@ -203,20 +205,5 @@ namespace School
             WriteText($"{CommandShowAllCards} - To see all cards", ConsoleColor.Cyan);
             WriteText($"{CommandExit} - To exit", ConsoleColor.Cyan);
         }
-    }
-
-    enum Suits
-    {
-        Heart = 0,
-        Dimond,
-        Club,
-        Spades,
-    }
-    enum FaceCards
-    {
-        V = 11,
-        Q,
-        K,
-        A,
     }
 }
