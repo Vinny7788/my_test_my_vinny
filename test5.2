@@ -40,13 +40,11 @@ namespace School
 
     class PlayersBase
     {
-        public int UniqueId { get; private set; }
-
-        private int _sleepOneSecond = 1000;
+        private int _uniqueId;
         private int _sleepTwoSecond = 2000;
         private bool _isWork;
 
-        private List<Player> AllPlayers = new List<Player>();
+        private List<Player> Players = new List<Player>();
 
         public void Work()
         {
@@ -92,7 +90,7 @@ namespace School
                         break;
 
                     case CommandSerchPlayer:
-                        SerchPlayer();
+                        SerchPlayer1();
                         break;
 
                     case CommandTerminateProgram:
@@ -111,175 +109,151 @@ namespace School
 
         private void DeletePlayer()
         {
-            int userIdInput;
 
-            WriteText("Write player id: ");
-
-            if (int.TryParse(Console.ReadLine(), out userIdInput) && userIdInput < AllPlayers.Count)
+            if (TryGetPlayer(out Player player, "Invalid Format", ConsoleColor.Red))
             {
-                AllPlayers.RemoveAt(userIdInput);
-            }
-            else
-            {
-                WriteText("Invalid format", ConsoleColor.Red);
-                Thread.Sleep(_sleepTwoSecond);
+                Players.Remove(player);
             }
         }
 
         private void ShowAllPlayers()
         {
 
-            for (int i = 0; i < AllPlayers.Count; i++)
+            for (int i = 0; i < Players.Count; i++)
             {
-                Console.Write($"Nickname - {AllPlayers[i].NickName} / id - {AllPlayers[i].Id} / level - {AllPlayers[i].Level} / Ban status - ");
-                ShowBunInformation(i);
+                Console.Write($"Nickname - {Players[i].NickName} / id - {Players[i].Id} / level - {Players[i].Level} / Ban status - ");
+                PrintBanStatus(i);
             }
         }
 
-        private void ShowBunInformation(int index)
+        private void PrintBanStatus(Player player)
         {
 
-            if (AllPlayers[index].Ban == true)
+            if (player.isBan == true)
             {
-                WriteText(Convert.ToString(AllPlayers[index].Ban), ConsoleColor.Red);
+                WriteText(Convert.ToString(player.isBan), ConsoleColor.Red);
             }
             else
             {
-                WriteText(Convert.ToString(AllPlayers[index].Ban), ConsoleColor.Green);
+                WriteText(Convert.ToString(player.isBan), ConsoleColor.Green);
+            }
+        }
+
+        private void PrintBanStatus(int index)
+        {
+
+            if (Players[index].isBan == true)
+            {
+                WriteText(Convert.ToString(Players[index].isBan), ConsoleColor.Red);
+            }
+            else
+            {
+                WriteText(Convert.ToString(Players[index].isBan), ConsoleColor.Green);
             }
         }
 
         private void AddNewPlayer()
         {
             string userInput;
+
             Console.Write("Write the Nickname : ");
             userInput = Console.ReadLine();
 
-            AllPlayers.Add(new Player(userInput, IdGeneration()));
+            Players.Add(new Player(userInput, GenerationId()));
             Console.Clear();
         }
 
-        private int IdGeneration()
+        private int GenerationId()
         {
-            Random random = new Random();
             int idModificator = 8900;
-            UniqueId++;
-            return idModificator + UniqueId;
+            _uniqueId++;
+
+            return idModificator + _uniqueId;
         }
 
         private void BanPlayer()
         {
-            string userInput;
 
-            Console.Write("Write Player ID: ");
-            userInput = Console.ReadLine();
-
-            if (Int32.TryParse(userInput, out int id) && id >= 0 && id <= FindLastId())
+            if (TryGetPlayer(out Player player, "Invalid Format", ConsoleColor.Red))
             {
-                int index = AllPlayers.FindIndex(player => player.Id == id);
 
-                if (AllPlayers[index].Ban)
+                if (player.isBan == true)
                 {
-                    AllPlayers[index].ChangeBanStatus(false);
+                    player.UnbanPlayer(player);
                 }
                 else
                 {
-                    AllPlayers[index].ChangeBanStatus(true);
+                    player.BanPlayer(player);
                 }
 
                 WriteText("Operation Complete", ConsoleColor.Green);
                 Thread.Sleep(_sleepTwoSecond);
                 Console.Clear();
             }
+        }
+
+        private bool TryGetPlayer(out Player player, string ErrorText, ConsoleColor color = ConsoleColor.White)
+        {
+            WriteText("Write Player ID: ", ConsoleColor.Yellow);
+            string userInput = Console.ReadLine();
+
+            if (int.TryParse(userInput, out int playerIdToFind))
+            {
+
+            }
             else
             {
-                WriteText("ID not found!", ConsoleColor.Red);
+                WriteText(ErrorText, color);
                 Thread.Sleep(_sleepTwoSecond);
                 Console.Clear();
             }
+
+            player = null;
+            player = Players.Find(p => p.Id == playerIdToFind);
+
+            return player != null;
         }
 
-        private void SerchPlayer()
+        private void SerchPlayer1()
         {
-            string userInput;
 
-            Console.Write("Enter ID to search a Player :");
-            userInput = Console.ReadLine();
-
-            if (Int32.TryParse(userInput, out int id))
-            {
-                int index = (AllPlayers.FindIndex(player => player.Id == id));
-
-                if (index != -1)
-                {
-                    Console.Clear();
-
-                    WriteText($"Player with ID - /{id}/ Found", ConsoleColor.Green);
-                    Console.Write($"Nickname - {AllPlayers[index].NickName} / id - {AllPlayers[index].Id} / level - {AllPlayers[index].Level} / Ban status - ");
-                    ShowBunInformation(index);
-
-                    Console.ReadLine();
-                    Console.Clear();
-                }
-                else
-                {
-                    Console.Clear();
-
-                    WriteText($"Player with ID - /{id}/ not Found\n", ConsoleColor.Red);
-
-                    Thread.Sleep(_sleepTwoSecond);
-                    Console.Clear();
-                }
-
-            }
-            else
+            if (TryGetPlayer(out Player player, $"Player not Found\n", ConsoleColor.Red))
             {
                 Console.Clear();
 
-                WriteText("Invalid foramt", ConsoleColor.Red);
+                WriteText($"Player with ID - /{player.Id}/ Found", ConsoleColor.Green);
+                WriteText("Nickname - {player.NickName} / id - {player.Id} / level - {player.Level} / Ban status - ");
+                PrintBanStatus(player);
 
-                Thread.Sleep(_sleepOneSecond);
-
+                Console.ReadLine();
+                Console.Clear();
             }
-        }
-
-        private int FindLastId()
-        {
-            int maxId = 0;
-
-            for (int i = 0; i < AllPlayers.Count; i++)
-            {
-
-                if (AllPlayers[i].Id > maxId)
-                {
-                    maxId = AllPlayers[i].Id;
-                }
-            }
-            return maxId;
+            else { }
         }
     }
 
-
     class Player
     {
-        private bool _ban;
-
         public Player(string nickName, int id)
         {
             NickName = nickName;
             Id = id;
-            Ban = false;
+            isBan = false;
             Level = 1;
         }
 
         public int Id { get; private set; }
         public int Level { get; private set; }
         public string NickName { get; private set; }
-        public bool Ban { get; private set; }
+        public bool isBan { get; private set; }
 
-        public bool ChangeBanStatus(bool BanStatus)
+        public void BanPlayer(Player player)
         {
-           return Ban = BanStatus;
-        }        
+            player.isBan = true;
+        }
+        public void UnbanPlayer(Player player)
+        {
+            player.isBan = false;
+        }
     }
 }
