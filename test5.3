@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace School
 {
@@ -16,6 +17,7 @@ namespace School
             bool isWork = true;
             string userInput;
 
+            Program program = new Program();
             MainText mainText = new MainText();
             Player player = new Player();
             DeckCard deck = new DeckCard();
@@ -33,7 +35,7 @@ namespace School
                 switch (userInput)
                 {
                     case CommandTakeCard:
-                        deck.GiveCard(player);
+                        program.GiveCard(player, deck);
                         break;
 
                     case CommandShowMyCards:
@@ -41,7 +43,8 @@ namespace School
                         break;
 
                     case CommandRestar:
-                        deck.RestarDeckCard(player);
+                        deck.RestarDeckCard();
+                        player.DeletePlayerCards();
                         break;
 
                     case CommandShowAllCards:
@@ -54,26 +57,37 @@ namespace School
                 }
             }
         }
+
+        public void GiveCard(Player player, DeckCard deck)
+        {
+            Card card = deck.GetCard();
+
+            if (card != null)
+            {
+                player.TakeCard(card);
+            }
+            else
+            {
+                Console.WriteLine("No cards");
+                Thread.Sleep(1000);
+            }
+        }
     }
 
     class Card
     {
-        public Card(string cardNumber, string suit)
+        public Card(string number, string suit)
         {
-            CardNumber = cardNumber;
+            Number = number;
             Suit = suit;
         }
 
-        public string CardNumber { get; private set; }
+        public string Number { get; private set; }
         public string Suit { get; private set; }
     }
 
     class DeckCard
     {
-        private string[] _suits = new string[] { "♠", "♣", "♦", "♥" };
-
-        private string[] _cards1 = new string[] { "6", "7", "8", "9", "10", "V", "Q", "K", "A" };
-
         private List<Card> _cards = new List<Card>();
 
         public void ShowAllCards()
@@ -81,77 +95,61 @@ namespace School
 
             for (int i = 0; i < _cards.Count; i++)
             {
-                Console.WriteLine($"{_cards[i].CardNumber} / {_cards[i].Suit}\n");
+                Console.WriteLine($"{_cards[i].Number} / {_cards[i].Suit}\n");
             }
 
             Console.ReadLine();
         }
 
-        public void RestarDeckCard(Player player)
-        {           
-            player.DeletePlayerCards();
+        public void RestarDeckCard()
+        {
             _cards.Clear();
             AddCards();
-            ShuffleDeck(_cards);
         }
 
         public void PreparingCards()
         {
             AddCards();
-            ShuffleDeck(_cards);
         }
 
-        public void GiveCard(Player player)
-        {
-            Card card = GetCard();
-
-            if (card != null)
-            {
-                player.TakeCard(card);
-            }
-        }
-
-        public void ShuffleDeck<cards>(List<cards> _cards)
-        {
-            Random random = new Random();
-            int i = _cards.Count;
-
-            while (i > 1)
-            {
-                i--;
-                int randomNumber = random.Next(i + 1);
-                cards value = _cards[randomNumber];
-                _cards[randomNumber] = _cards[i];
-                _cards[i] = value;
-            }
-        }
-
-        private void AddCards()
-        {
-
-            for (int i = 0; i < _suits.Length; i++)
-            {
-
-                for (int j = 0; j < _cards1.Length; j++)
-                {
-                    _cards.Add(new Card(_cards1[j], _suits[i]));
-                }
-            }
-        }
-
-        private Card GetCard()
+        public Card GetCard()
         {
 
             if (_cards.Count > 0)
             {
-                int firstCard = 0;
-
-                Card card = _cards[firstCard];
+                Card card = _cards[0];
                 _cards.Remove(card);
                 return card;
             }
 
             return null;
+        }
+
+        private void AddCards()
+        {
+            string[] _suits = new string[] { "♠", "♣", "♦", "♥" };
+            string[] _cardsPictures = new string[] { "6", "7", "8", "9", "10", "V", "Q", "K", "A" };
+
+            Random random = new Random();
+
+            for (int i = 0; i < _suits.Length; i++)
+            {
+
+                for (int j = 0; j < _cardsPictures.Length; j++)
+                {
+                    _cards.Add(new Card(_cardsPictures[j], _suits[i]));
+                }
+            }
+
+            for (int i = _cards.Count - 1; i > 0; i--)
+            {
+
+                int n = random.Next(_cards.Count);
+                int j = random.Next(_cards.Count);
+                var tempCard = _cards[n];
+                _cards[n] = _cards[j];
+                _cards[j] = tempCard;
+            }
         }
     }
 
@@ -164,7 +162,7 @@ namespace School
 
             for (int i = 0; i < PlayerCards.Count; i++)
             {
-                Console.WriteLine($"{PlayerCards[i].CardNumber} / {PlayerCards[i].Suit}\n");
+                Console.WriteLine($"{PlayerCards[i].Number} / {PlayerCards[i].Suit}\n");
             }
 
             Console.ReadLine();
