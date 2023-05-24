@@ -42,23 +42,23 @@ namespace School
     {
         private int _uniqueId;
         private int _sleepTwoSecond = 2000;
-        private bool _isWork;
 
-        private List<Player> Players = new List<Player>();
+        private List<Player> _players = new List<Player>();
 
         public void Work()
         {
             const string CommandAddPlayer = "1";
-            const string CommandBanUnban = "2";
-            const string CommandDeletePlayer = "3";
-            const string CommandSerchPlayer = "4";
-            const string CommandTerminateProgram = "5";
+            const string CommandBanPlayer = "2";
+            const string CommandUnbanPlayer = "3";
+            const string CommandDeletePlayer = "4";
+            const string CommandSerchPlayer = "5";
+            const string CommandTerminateProgram = "6";
 
-            _isWork = true;
+            bool isWork = true;
 
             Console.Clear();
 
-            while (_isWork)
+            while (isWork)
             {
                 string userInput;
 
@@ -67,7 +67,8 @@ namespace School
                 Console.SetCursorPosition(0, 0);
 
                 WriteText($"{CommandAddPlayer} - To add a new player.", ConsoleColor.Yellow);
-                WriteText($"{CommandBanUnban} - To ban or unban a player.", ConsoleColor.Yellow);
+                WriteText($"{CommandBanPlayer} - To ban a player.", ConsoleColor.Yellow);
+                WriteText($"{CommandUnbanPlayer} - To unban a player.", ConsoleColor.Yellow);
                 WriteText($"{CommandDeletePlayer} - To delete player.", ConsoleColor.Yellow);
                 WriteText($"{CommandSerchPlayer} - To serch the player.", ConsoleColor.Yellow);
                 WriteText($"{CommandTerminateProgram} - To terminate the program.", ConsoleColor.Yellow);
@@ -81,8 +82,12 @@ namespace School
                         AddNewPlayer();
                         break;
 
-                    case CommandBanUnban:
+                    case CommandBanPlayer:
                         BanPlayer();
+                        break;
+
+                    case CommandUnbanPlayer:
+                        UnbanPleyer();
                         break;
 
                     case CommandDeletePlayer:
@@ -90,11 +95,11 @@ namespace School
                         break;
 
                     case CommandSerchPlayer:
-                        SerchPlayer1();
+                        SerchPlayer();
                         break;
 
                     case CommandTerminateProgram:
-                        _isWork = false;
+                        isWork = false;
                         break;
                 }
             }
@@ -110,18 +115,26 @@ namespace School
         private void DeletePlayer()
         {
 
-            if (TryGetPlayer(out Player player, "Invalid Format", ConsoleColor.Red))
+            if (TryGetPlayer(out Player player))
             {
-                Players.Remove(player);
+                _players.Remove(player);
+                WriteText("Operation Complete", ConsoleColor.Green);
+                Thread.Sleep(_sleepTwoSecond);
+                Console.Clear();
+            }
+            else
+            {
+                WriteText("Player Not found", ConsoleColor.Red);
+                Thread.Sleep(_sleepTwoSecond);
             }
         }
 
         private void ShowAllPlayers()
         {
 
-            for (int i = 0; i < Players.Count; i++)
+            for (int i = 0; i < _players.Count; i++)
             {
-                Console.Write($"Nickname - {Players[i].NickName} / id - {Players[i].Id} / level - {Players[i].Level} / Ban status - ");
+                Console.Write($"Nickname - {_players[i].NickName} / id - {_players[i].Id} / level - {_players[i].Level} / Ban status - ");
                 PrintBanStatus(i);
             }
         }
@@ -129,26 +142,26 @@ namespace School
         private void PrintBanStatus(Player player)
         {
 
-            if (player.isBan == true)
+            if (player.isPlayerBanned == true)
             {
-                WriteText(Convert.ToString(player.isBan), ConsoleColor.Red);
+                WriteText(Convert.ToString(player.isPlayerBanned), ConsoleColor.Red);
             }
             else
             {
-                WriteText(Convert.ToString(player.isBan), ConsoleColor.Green);
+                WriteText(Convert.ToString(player.isPlayerBanned), ConsoleColor.Green);
             }
         }
 
         private void PrintBanStatus(int index)
         {
 
-            if (Players[index].isBan == true)
+            if (_players[index].isPlayerBanned == true)
             {
-                WriteText(Convert.ToString(Players[index].isBan), ConsoleColor.Red);
+                WriteText(Convert.ToString(_players[index].isPlayerBanned), ConsoleColor.Red);
             }
             else
             {
-                WriteText(Convert.ToString(Players[index].isBan), ConsoleColor.Green);
+                WriteText(Convert.ToString(_players[index].isPlayerBanned), ConsoleColor.Green);
             }
         }
 
@@ -159,7 +172,7 @@ namespace School
             Console.Write("Write the Nickname : ");
             userInput = Console.ReadLine();
 
-            Players.Add(new Player(userInput, GenerationId()));
+            _players.Add(new Player(userInput, GenerationId()));
             Console.Clear();
         }
 
@@ -171,64 +184,109 @@ namespace School
             return idModificator + _uniqueId;
         }
 
-        private void BanPlayer()
+        private void UnbanPleyer()
         {
 
-            if (TryGetPlayer(out Player player, "Invalid Format", ConsoleColor.Red))
+            if (TryGetPlayer(out Player player))
             {
 
-                if (player.isBan == true)
+                if (player.isPlayerBanned == true)
                 {
-                    player.UnbanPlayer(player);
+                    player.UnbanPlayer();
+
+                    WriteText("Operation Complete", ConsoleColor.Green);
+                    Thread.Sleep(_sleepTwoSecond);
+                    Console.Clear();
                 }
                 else
                 {
-                    player.BanPlayer(player);
+                    WriteText("The player is not banned.", ConsoleColor.Red);
+                    Thread.Sleep(_sleepTwoSecond);
+                    Console.Clear();
                 }
-
-                WriteText("Operation Complete", ConsoleColor.Green);
-                Thread.Sleep(_sleepTwoSecond);
-                Console.Clear();
-            }
-        }
-
-        private bool TryGetPlayer(out Player player, string ErrorText, ConsoleColor color = ConsoleColor.White)
-        {
-            WriteText("Write Player ID: ", ConsoleColor.Yellow);
-            string userInput = Console.ReadLine();
-
-            if (int.TryParse(userInput, out int playerIdToFind))
-            {
 
             }
             else
             {
-                WriteText(ErrorText, color);
+                WriteText("Player Not found", ConsoleColor.Red);
                 Thread.Sleep(_sleepTwoSecond);
-                Console.Clear();
+            }
+        }
+
+        private void BanPlayer()
+        {
+
+            if (TryGetPlayer(out Player player))
+            {
+
+                if (player.isPlayerBanned != true)
+                {
+                    player.BanPlayer();
+
+                    WriteText("Operation Complete", ConsoleColor.Green);
+                    Thread.Sleep(_sleepTwoSecond);
+                    Console.Clear();
+                }
+                else
+                {
+                    WriteText("The player is already banned", ConsoleColor.Red);
+                    Thread.Sleep(_sleepTwoSecond);
+                    Console.Clear();
+                }
+
+            }
+            else
+            {
+                WriteText("Player Not found", ConsoleColor.Red);
+                Thread.Sleep(_sleepTwoSecond);
+            }
+        }
+
+        private bool TryGetPlayer(out Player player)
+        {
+            WriteText("Write Player ID: ", ConsoleColor.Yellow);
+            string userInput = Console.ReadLine();
+            int playerIdToFind;
+
+            if (int.TryParse(userInput, out int userIdInput))
+            {
+                playerIdToFind = userIdInput;
+            }
+            else
+            {
+                playerIdToFind = -1;
             }
 
             player = null;
-            player = Players.Find(p => p.Id == playerIdToFind);
+            player = _players.Find(p => p.Id == playerIdToFind);
 
             return player != null;
         }
 
-        private void SerchPlayer1()
+        private void SerchPlayer()
         {
 
-            if (TryGetPlayer(out Player player, $"Player not Found\n", ConsoleColor.Red))
+            if (TryGetPlayer(out Player player))
             {
+
+                if (player != null)
+                {
                 Console.Clear();
 
                 WriteText($"Player with ID - /{player.Id}/ Found", ConsoleColor.Green);
-                WriteText("Nickname - {player.NickName} / id - {player.Id} / level - {player.Level} / Ban status - ");
+                WriteText($"Nickname - {player.NickName} / id - {player.Id} / level - {player.Level} / Ban status - ");
                 PrintBanStatus(player);
 
                 Console.ReadLine();
                 Console.Clear();
+                }
+
             }
-            else { }
+            else
+            {
+                WriteText("Player Not found", ConsoleColor.Red);
+                Thread.Sleep(_sleepTwoSecond);
+            }
         }
     }
 
@@ -238,22 +296,22 @@ namespace School
         {
             NickName = nickName;
             Id = id;
-            isBan = false;
+            isPlayerBanned = false;
             Level = 1;
         }
 
         public int Id { get; private set; }
         public int Level { get; private set; }
         public string NickName { get; private set; }
-        public bool isBan { get; private set; }
+        public bool isPlayerBanned { get; private set; }
 
-        public void BanPlayer(Player player)
+        public void BanPlayer()
         {
-            player.isBan = true;
+            isPlayerBanned = true;
         }
-        public void UnbanPlayer(Player player)
+        public void UnbanPlayer()
         {
-            player.isBan = false;
+            isPlayerBanned = false;
         }
     }
 }
