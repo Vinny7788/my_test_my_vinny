@@ -17,34 +17,31 @@ namespace School
             bool isWork = true;
             string userInput;
 
-            Program program = new Program();
             MainText mainText = new MainText();
             Player player = new Player();
             DeckCard deck = new DeckCard();
-
-            deck.PreparingCards();
 
             while (isWork)
             {
                 Console.Clear();
 
-                mainText.WriteCommandText();
+                mainText.WriteCommand();
 
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case CommandTakeCard:
-                        program.GiveCard(player, deck);
+                        player.TakeCard(deck.GetCard());
                         break;
 
                     case CommandShowMyCards:
-                        player.ShowPlayerCards();
+                        player.ShowCards();
                         break;
 
                     case CommandRestar:
-                        deck.RestarDeckCard();
-                        player.DeletePlayerCards();
+                        deck.Restar();
+                        player.DeleteCards();
                         break;
 
                     case CommandShowAllCards:
@@ -55,21 +52,6 @@ namespace School
                         isWork = false;
                         break;
                 }
-            }
-        }
-
-        public void GiveCard(Player player, DeckCard deck)
-        {
-            Card card = deck.GetCard();
-
-            if (card != null)
-            {
-                player.TakeCard(card);
-            }
-            else
-            {
-                Console.WriteLine("No cards");
-                Thread.Sleep(1000);
             }
         }
     }
@@ -88,11 +70,16 @@ namespace School
 
     class DeckCard
     {
+        public DeckCard()
+        {
+            AddCards();
+            ShufflingCards();
+        }
+            
         private List<Card> _cards = new List<Card>();
 
         public void ShowAllCards()
         {
-
             for (int i = 0; i < _cards.Count; i++)
             {
                 Console.WriteLine($"{_cards[i].Number} / {_cards[i].Suit}\n");
@@ -101,20 +88,14 @@ namespace School
             Console.ReadLine();
         }
 
-        public void RestarDeckCard()
+        public void Restar()
         {
             _cards.Clear();
             AddCards();
         }
 
-        public void PreparingCards()
-        {
-            AddCards();
-        }
-
         public Card GetCard()
         {
-
             if (_cards.Count > 0)
             {
                 Card card = _cards[0];
@@ -140,48 +121,59 @@ namespace School
                     _cards.Add(new Card(_cardsPictures[j], _suits[i]));
                 }
             }
+        }
+
+        private void ShufflingCards()
+        {
+            Random random = new Random();
 
             for (int i = _cards.Count - 1; i > 0; i--)
             {
-
                 int n = random.Next(_cards.Count);
                 int j = random.Next(_cards.Count);
-                var tempCard = _cards[n];
+                Card temporary = _cards[n];
                 _cards[n] = _cards[j];
-                _cards[j] = tempCard;
+                _cards[j] = temporary;
             }
         }
     }
 
     class Player
     {
-        private List<Card> PlayerCards = new List<Card>();
+        private List<Card> _cards = new List<Card>();
 
-        public void ShowPlayerCards()
+        public void ShowCards()
         {
-
-            for (int i = 0; i < PlayerCards.Count; i++)
+            for (int i = 0; i < _cards.Count; i++)
             {
-                Console.WriteLine($"{PlayerCards[i].Number} / {PlayerCards[i].Suit}\n");
+                Console.WriteLine($"{_cards[i].Number} / {_cards[i].Suit}\n");
             }
 
             Console.ReadLine();
         }
 
-        public void DeletePlayerCards()
+        public void DeleteCards()
         {
-            PlayerCards.Clear();
+            _cards.Clear();
         }
 
         public void TakeCard(Card card)
-        {
-            PlayerCards.Add(card);
+        { 
+            if (card != null)
+            {
+                _cards.Add(card);
+            }
+            else
+            {
+                Console.WriteLine("No cards");
+                Thread.Sleep(1000);
+            }
         }
     }
 
     class MainText
     {
-        public void WriteText(string text, ConsoleColor color = ConsoleColor.White)
+        private void WriteText(string text, ConsoleColor color = ConsoleColor.White)
         {
             ConsoleColor defualt = Console.ForegroundColor;
             Console.ForegroundColor = color;
@@ -189,7 +181,7 @@ namespace School
             Console.ForegroundColor = defualt;
         }
 
-        public void WriteCommandText()
+        public void WriteCommand()
         {
             const string CommandTakeCard = "1";
             const string CommandShowMyCards = "2";
