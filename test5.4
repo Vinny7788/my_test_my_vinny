@@ -1,0 +1,382 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WindowHeight = 50;
+            Console.WindowWidth = 150;
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Clear();
+            Console.CursorVisible = false;
+
+            Libery libery = new Libery();
+
+            libery.OpenBooksArchiv();
+        }
+    }
+
+    class Libery
+    {
+        private List<Book> _serched = new List<Book>();
+        private List<Book> _books = new List<Book>();
+
+        private int _oneSecondSleep = 1000;
+
+        public void OpenBooksArchiv()
+        {
+            const string CommandShowAll = "1";
+            const string CommandAddNew = "2";
+            const string CommandSearch = "3";
+            const string CommandDelete = "4";
+            const string CommandExit = "5";
+
+            bool isWork = true;
+            string userInput;
+
+            AddBooksForExample();
+
+            while (isWork)
+            {
+                Console.Clear();
+                WriteTextLine($"To show all books press - {CommandShowAll}");
+                WriteTextLine($"To add a book press - {CommandAddNew}");
+                WriteTextLine($"To find a book press - {CommandSearch}");
+                WriteTextLine($"To delete a book press - {CommandDelete}");
+                WriteTextLine($"To exit press - {CommandExit}");
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case CommandShowAll:
+                        ShowAll();
+                        Console.ReadLine();
+                        break;
+
+                    case CommandAddNew:
+                        Add();
+                        break;
+
+                    case CommandSearch:
+                        Search();
+                        break;
+
+                    case CommandDelete:
+                        Delete();
+                        break;
+
+                    case CommandExit:
+                        isWork = false;
+                        break;
+                }
+            }
+        }
+
+        private void ShowAll()
+        {
+            Console.Clear();
+
+            for (int i = 0; i < _books.Count; i++)
+            {
+                DispalyBookInformation(i);
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+        }
+
+        private void Search()
+        {
+            const string CommandSearchByAuthor = "1";
+            const string CommandSearchByTitle = "2";
+            const string CommandSearchByYear = "3";
+
+            List<Book> serch = new List<Book>();
+            Console.Clear();
+
+            WriteTextLine($"To start a search by author press - {CommandSearchByAuthor}", ConsoleColor.DarkGreen);
+            WriteTextLine($"To start a search by title press - {CommandSearchByTitle}", ConsoleColor.DarkGreen);
+            WriteTextLine($"To start a search by year press - {CommandSearchByYear}", ConsoleColor.DarkGreen);
+
+            string userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case CommandSearchByAuthor:
+                    SearchByAuthor();
+                    break;
+
+                case CommandSearchByTitle:
+                    SearchByTitle1();
+                    break;
+
+                case CommandSearchByYear:
+                    SearchByYear();
+                    break;
+            }
+        }
+
+        private void Add()
+        {
+            string title;
+            string author;
+            int numberOfPages;
+            int year;
+
+            Console.Clear();
+
+            WriteTextLine("Enter the author's name: ", ConsoleColor.Black);
+            author = Console.ReadLine();
+
+            WriteTextLine("Enter the title of the book: ", ConsoleColor.Black);
+            title = Console.ReadLine();
+
+            WriteTextLine("Enter the year: ", ConsoleColor.Black);
+            year = ConvertToNumber(Console.ReadLine());
+
+            WriteTextLine("Enter the number of pages: ", ConsoleColor.Black);
+            numberOfPages = ConvertToNumber(Console.ReadLine());
+
+            if (year < 0 || numberOfPages < 0)
+            {
+                Console.Clear();
+                WriteTextLine("Invalid format", ConsoleColor.Red);
+                Thread.Sleep(_oneSecondSleep);
+            }
+            else
+            {
+                _books.Add(new Book(author, title, year, numberOfPages));
+            }
+        }
+
+        private void DispalyBookInformation(int index)
+        {
+            WriteText("Book title - ");
+            WriteText($"/{_books[index].Title}/ ", ConsoleColor.Green);
+
+            WriteText("Book author - ");
+            WriteText($"/{_books[index].Author}/ ", ConsoleColor.Green);
+
+            WriteText("Book year - ");
+            WriteText($"/{Convert.ToString(_books[index].Year)}/ ", ConsoleColor.Green);
+
+            WriteText("Number of Pages - ");
+            WriteText($"/{Convert.ToString(_books[index].NumberOfPages)}/ ", ConsoleColor.Green);
+            Console.WriteLine();
+        }
+
+        private void DispalyFoundetBookInformatio(int index)
+        {
+            WriteText("Book title - ");
+            WriteText($"/{_serched[index].Title}/ ", ConsoleColor.Green);
+
+            WriteText("Book author - ");
+            WriteText($"/{_serched[index].Author}/ ", ConsoleColor.Green);
+
+            WriteText("Book year - ");
+            WriteText($"/{Convert.ToString(_serched[index].Year)}/ ", ConsoleColor.Green);
+
+            WriteText("Number of Pages - ");
+            WriteText($"/{Convert.ToString(_serched[index].NumberOfPages)}/ ", ConsoleColor.Green);
+            Console.WriteLine();
+        }
+
+        private void WriteText(string text, ConsoleColor color = ConsoleColor.Black)
+        {
+            ConsoleColor defualt = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ForegroundColor = defualt;
+        }
+
+        private void WriteTextLine(string text, ConsoleColor color = ConsoleColor.Black)
+        {
+            ConsoleColor defualt = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defualt;
+        }
+
+        private void SearchByAuthor()
+        {
+            string userInput;
+
+            Console.Clear();
+
+            WriteText("Write the author: ");
+            userInput = Console.ReadLine();
+
+            for (int i = 0; i < _books.Count; i++)
+            {
+
+                if (_books[i].Author.ToLower() == userInput.ToLower())
+                {
+                    Book book = _books[i];
+                    _serched.Add(book);
+                }
+            }
+
+            if (_serched.Count > 0)
+            {
+                DisplayFoundetBooks();
+            }
+            else
+            {
+                WriteText("Nothing not found !", ConsoleColor.Red);
+                Thread.Sleep(_oneSecondSleep);
+            }
+        }  
+
+        private void SearchByYear()
+        {
+            string userInput;
+
+            Console.Clear();
+
+            WriteText("Enter the year: ");
+            userInput = Console.ReadLine();
+
+            if (int.TryParse(userInput, out int userInputYear))
+            {
+
+              _serched = _books.FindAll(book => book.Year == userInputYear);
+
+                if (_serched.Count > 0)
+                {
+                    DisplayFoundetBooks();
+                }
+                else
+                {
+                    WriteText("Nothing not found !", ConsoleColor.Red);
+                    Thread.Sleep(_oneSecondSleep);
+                }
+
+            }
+            else
+            {
+                WriteTextLine("Invalid format!", ConsoleColor.Red);
+                Thread.Sleep(_oneSecondSleep);
+            }
+        }     
+
+        private void SearchByTitle1()
+        {
+            string userInput;
+
+            Console.Clear();
+
+            WriteText("Write the Title: ");
+            userInput = Console.ReadLine();
+
+            _serched = _books.FindAll(book => book.Title == userInput);
+
+            if(_serched.Count > 0)
+            {
+                DisplayFoundetBooks();
+            }
+            else
+            {
+                WriteText("Nothing not found !", ConsoleColor.Red);
+                Thread.Sleep(_oneSecondSleep);
+            }
+        }
+
+        private void DisplayFoundetBooks()
+        {
+            Console.Clear();
+
+            WriteTextLine("We Found - :", ConsoleColor.Red);
+
+            for (int i = 0; i < _serched.Count; i++)
+            {
+                DispalyFoundetBookInformatio(i);
+            }
+
+            _serched.Clear();
+            Console.ReadLine();
+        }
+
+        private void AddBooksForExample()
+        {
+            _books.Add(new Book("George Orwell", "1984", 1949, 328));
+            _books.Add(new Book("Harper Lee", "To Kill a Mockingbird", 1960, 281));
+            _books.Add(new Book("J.K.Rowling", "Harry Potter and the Philosopher's Stone", 1997, 309));
+            _books.Add(new Book("J.R.R.Tolkien", "The Lord of the Rings", 1954, 1178));
+            _books.Add(new Book("F.Scott Fitzgerald", "The Great Gatsby", 1925, 180));
+            _books.Add(new Book("Jane Austen", "Pride and Prejudice", 1813, 279));
+            _books.Add(new Book("Mary Shelley", "Frankenstein", 1818, 280));
+            _books.Add(new Book("Charlotte Bronte", "Jane Eyre", 1847, 512));
+            _books.Add(new Book("George Orwell", "1984", 1949, 328));
+            _books.Add(new Book("Mark Twain", "Adventures of Huckleberry Finn", 1884, 224));
+            _books.Add(new Book("Ray Bradbury", "Fahrenheit 451", 1953, 249));
+            _books.Add(new Book("J.D.Salinger", "The Catcher in the Rye", 1951, 214));
+            _books.Add(new Book("Emily Bronte", "Wuthering Heights", 1847, 464));
+            _books.Add(new Book("Ernest Hemingway", "The Old Man and the Sea", 1952, 127));
+            _books.Add(new Book("Lewis Carroll", "Alice's Adventures in Wonderland", 1865, 200));
+            _books.Add(new Book("Mark Twain", "Adventures of Huckleberry Finn", 1884, 224));
+        }
+
+        private void Delete()
+        {
+            const string CommandDeleteAllBooksByAuthor = "1";
+            const string CommandDeleteByTitle = "2";
+
+            WriteTextLine($"If you want to delete all books by the author press - {CommandDeleteAllBooksByAuthor}");
+            WriteTextLine($"If you want to delete book by title press - {CommandDeleteByTitle}");
+
+            string userInput = Console.ReadLine();
+
+            if (userInput == CommandDeleteAllBooksByAuthor)
+            {
+                Console.Clear();
+                WriteText("Write the author: ");
+                userInput = Console.ReadLine();
+
+                _books.RemoveAll(book => book.Author == userInput);
+            }
+            else
+            {
+                Console.Clear();
+                WriteText("Write the title: ");
+                userInput = Console.ReadLine();
+
+                _books.RemoveAll(book => book.Title == userInput);
+            }
+        }
+
+        private int ConvertToNumber(string input)
+        {
+
+            if (int.TryParse(input, out int number))
+            {
+                return number;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
+
+    class Book
+    {
+        public Book(string author, string title, int year, int numberOfPages)
+        {
+            Author = author;
+            Title = title;
+            Year = year;
+            NumberOfPages = numberOfPages;
+        }
+
+        public int NumberOfPages { get; private set; }
+        public string Author { get; private set; }
+        public string Title { get; private set; }
+        public int Year { get; private set; }
+    }
+}
