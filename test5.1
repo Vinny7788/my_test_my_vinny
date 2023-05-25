@@ -6,12 +6,12 @@ namespace School
     {
         static void Main(string[] args)
         {
-            Rander map = new Rander();
+            Rander render = new Rander();
             Player player = new Player(10, 15, '$');
 
             Console.CursorVisible = false;
 
-            map.DrawPlayer(player);
+            render.DrawPlayer(player);
 
             Console.ReadKey(true);
         }
@@ -21,23 +21,23 @@ namespace School
     {
         public void DrawPlayer(Player player)
         {
-            Console.SetCursorPosition(player.PositionX, player.PositionY);
-            Console.WriteLine(player.Symbol);
+            Console.SetCursorPosition(player.positionX, player.positionY);
+            Console.WriteLine(player.symbol);
         }
     }
 
     class Player
     {
-        public Player(int setPositionX, int setPositionY, char symbolSet)
+        public Player(int positionX, int positionY, char symbol)
         {
-            PositionX = setPositionX;
-            PositionY = setPositionY;
-            Symbol = symbolSet;
+            this.positionX = positionX;
+            this.positionY = positionY;
+            this.symbol = symbol;
         }
 
-        public int PositionX { get; private set; }
-        public int PositionY { get; private set; }
-        public char Symbol { get; private set; }
+        public int positionX { get; private set; }
+        public int positionY { get; private set; }
+        public char symbol { get; private set; }
     }
 }
 
