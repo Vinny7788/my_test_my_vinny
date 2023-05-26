@@ -84,7 +84,7 @@ namespace School
 
             for (int i = 0; i < _books.Count; i++)
             {
-                DispalyBookInformation(i);
+                DispalyBookInformation( i, _books);
                 Console.WriteLine();
             }
 
@@ -155,35 +155,19 @@ namespace School
             }
         }
 
-        private void DispalyBookInformation(int index)
+        private void DispalyBookInformation(int index, List<Book> booklist) 
         {
             WriteText("Book title - ");
-            WriteText($"/{_books[index].Title}/ ", ConsoleColor.Green);
+            WriteText($"/{booklist[index].Title}/ ", ConsoleColor.Green);
 
             WriteText("Book author - ");
-            WriteText($"/{_books[index].Author}/ ", ConsoleColor.Green);
+            WriteText($"/{booklist[index].Author}/ ", ConsoleColor.Green);
 
             WriteText("Book year - ");
-            WriteText($"/{Convert.ToString(_books[index].Year)}/ ", ConsoleColor.Green);
+            WriteText($"/{Convert.ToString(booklist[index].Year)}/ ", ConsoleColor.Green);
 
             WriteText("Number of Pages - ");
-            WriteText($"/{Convert.ToString(_books[index].NumberOfPages)}/ ", ConsoleColor.Green);
-            Console.WriteLine();
-        }
-
-        private void DispalyFoundetBookInformatio(int index)
-        {
-            WriteText("Book title - ");
-            WriteText($"/{_serched[index].Title}/ ", ConsoleColor.Green);
-
-            WriteText("Book author - ");
-            WriteText($"/{_serched[index].Author}/ ", ConsoleColor.Green);
-
-            WriteText("Book year - ");
-            WriteText($"/{Convert.ToString(_serched[index].Year)}/ ", ConsoleColor.Green);
-
-            WriteText("Number of Pages - ");
-            WriteText($"/{Convert.ToString(_serched[index].NumberOfPages)}/ ", ConsoleColor.Green);
+            WriteText($"/{Convert.ToString(booklist[index].NumberOfPages)}/ ", ConsoleColor.Green);
             Console.WriteLine();
         }
 
@@ -214,7 +198,6 @@ namespace School
 
             for (int i = 0; i < _books.Count; i++)
             {
-
                 if (_books[i].Author.ToLower() == userInput.ToLower())
                 {
                     Book book = _books[i];
@@ -231,7 +214,7 @@ namespace School
                 WriteText("Nothing not found !", ConsoleColor.Red);
                 Thread.Sleep(_oneSecondSleep);
             }
-        }  
+        }
 
         private void SearchByYear()
         {
@@ -244,8 +227,7 @@ namespace School
 
             if (int.TryParse(userInput, out int userInputYear))
             {
-
-              _serched = _books.FindAll(book => book.Year == userInputYear);
+                _serched = _books.FindAll(book => book.Year == userInputYear);
 
                 if (_serched.Count > 0)
                 {
@@ -263,7 +245,7 @@ namespace School
                 WriteTextLine("Invalid format!", ConsoleColor.Red);
                 Thread.Sleep(_oneSecondSleep);
             }
-        }     
+        }
 
         private void SearchByTitle1()
         {
@@ -276,7 +258,7 @@ namespace School
 
             _serched = _books.FindAll(book => book.Title == userInput);
 
-            if(_serched.Count > 0)
+            if (_serched.Count > 0)
             {
                 DisplayFoundetBooks();
             }
@@ -295,7 +277,7 @@ namespace School
 
             for (int i = 0; i < _serched.Count; i++)
             {
-                DispalyFoundetBookInformatio(i);
+                DispalyBookInformation(i, _serched);
             }
 
             _serched.Clear();
@@ -352,7 +334,6 @@ namespace School
 
         private int ConvertToNumber(string input)
         {
-
             if (int.TryParse(input, out int number))
             {
                 return number;
