@@ -70,13 +70,13 @@ namespace School
 
     class DeckCard
     {
+        private List<Card> _cards = new List<Card>();
+
         public DeckCard()
         {
             AddCards();
-            ShufflingCards();
+            ShuffleCards();
         }
-
-        private List<Card> _cards = new List<Card>();
 
         public void ShowAllCards()
         {
@@ -92,6 +92,7 @@ namespace School
         {
             _cards.Clear();
             AddCards();
+            ShuffleCards();
         }
 
         public Card GiveCard()
@@ -108,31 +109,29 @@ namespace School
 
         private void AddCards()
         {
-            string[] _suits = new string[] { "♠", "♣", "♦", "♥" };
-            string[] _cardsPictures = new string[] { "6", "7", "8", "9", "10", "V", "Q", "K", "A" };
+            string[] cardSuits = new string[] { "♠", "♣", "♦", "♥" };
+            string[] cardRanks = new string[] { "6", "7", "8", "9", "10", "V", "Q", "K", "A" };
 
-            Random random = new Random();
-
-            for (int i = 0; i < _suits.Length; i++)
+            for (int i = 0; i < cardSuits.Length; i++)
             {
-                for (int j = 0; j < _cardsPictures.Length; j++)
+                for (int j = 0; j < cardRanks.Length; j++)
                 {
-                    _cards.Add(new Card(_cardsPictures[j], _suits[i]));
+                    _cards.Add(new Card(cardRanks[j], cardSuits[i]));
                 }
             }
         }
 
-        private void ShufflingCards()
+        private void ShuffleCards()
         {
             Random random = new Random();
 
             for (int i = _cards.Count - 1; i > 0; i--)
             {
-                int n = random.Next(_cards.Count);
-                int j = random.Next(_cards.Count);
-                Card temporary = _cards[n];
-                _cards[n] = _cards[j];
-                _cards[j] = temporary;
+                int cardOne = random.Next(_cards.Count);
+                int cardTwo = random.Next(_cards.Count);
+                Card temporary = _cards[cardOne];
+                _cards[cardOne] = _cards[cardTwo];
+                _cards[cardTwo] = temporary;
             }
         }
     }
