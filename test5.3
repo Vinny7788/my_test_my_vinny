@@ -32,7 +32,7 @@ namespace School
                 switch (userInput)
                 {
                     case CommandTakeCard:
-                        player.TakeCard(deck.GetCard());
+                        player.TakeCard(deck.GiveCard());
                         break;
 
                     case CommandShowMyCards:
@@ -40,7 +40,7 @@ namespace School
                         break;
 
                     case CommandRestar:
-                        deck.Restar();
+                        deck.Restart();
                         player.DeleteCards();
                         break;
 
@@ -75,7 +75,7 @@ namespace School
             AddCards();
             ShufflingCards();
         }
-            
+
         private List<Card> _cards = new List<Card>();
 
         public void ShowAllCards()
@@ -88,13 +88,13 @@ namespace School
             Console.ReadLine();
         }
 
-        public void Restar()
+        public void Restart()
         {
             _cards.Clear();
             AddCards();
         }
 
-        public Card GetCard()
+        public Card GiveCard()
         {
             if (_cards.Count > 0)
             {
@@ -115,7 +115,6 @@ namespace School
 
             for (int i = 0; i < _suits.Length; i++)
             {
-
                 for (int j = 0; j < _cardsPictures.Length; j++)
                 {
                     _cards.Add(new Card(_cardsPictures[j], _suits[i]));
@@ -158,7 +157,7 @@ namespace School
         }
 
         public void TakeCard(Card card)
-        { 
+        {
             if (card != null)
             {
                 _cards.Add(card);
@@ -173,14 +172,6 @@ namespace School
 
     class MainText
     {
-        private void WriteText(string text, ConsoleColor color = ConsoleColor.White)
-        {
-            ConsoleColor defualt = Console.ForegroundColor;
-            Console.ForegroundColor = color;
-            Console.WriteLine(text);
-            Console.ForegroundColor = defualt;
-        }
-
         public void WriteCommand()
         {
             const string CommandTakeCard = "1";
@@ -194,6 +185,14 @@ namespace School
             WriteText($"{CommandRestar} - To reshuffle the cards", ConsoleColor.Cyan);
             WriteText($"{CommandShowAllCards} - To see all cards", ConsoleColor.Cyan);
             WriteText($"{CommandExit} - To exit", ConsoleColor.Cyan);
+        }
+
+        private void WriteText(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            ConsoleColor defualt = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defualt;
         }
     }
 }
