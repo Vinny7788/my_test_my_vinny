@@ -1,0 +1,437 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace School
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.CursorVisible = false;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.Clear();
+
+            Store store = new Store();
+            Client client = new Client();
+
+            Console.SetCursorPosition(0, 1);
+
+            store.Open(client);
+        }
+    }
+
+    class Store
+    {
+        private List<Product> _assortment = new List<Product>();
+
+        public Store()
+        {
+            AddProducts();
+        }
+
+        const ConsoleKey CommandMoveUp = ConsoleKey.UpArrow;
+        const ConsoleKey CommandMoveDown = ConsoleKey.DownArrow;
+        const ConsoleKey CommandEnter = ConsoleKey.Enter;
+        const ConsoleKey CommandDelete = ConsoleKey.Delete;
+        const ConsoleKey CommandAddProduct = ConsoleKey.Insert;
+        const ConsoleKey CommandOpenBusket = ConsoleKey.V;
+        const ConsoleKey CommandExitAdminMode = ConsoleKey.Home;
+        const ConsoleKey CommandEnterAdminMode = ConsoleKey.B;
+        const ConsoleKey CommandTerminateProgram = ConsoleKey.Escape;
+
+        private int _oneSecond = 1000;
+        private bool _isAdmin = false;
+        private int _cursorMoveY = 0;
+        private int _cursorPositionY = 1;
+        private int _cursorPositionX = 40;
+
+        public void Open(Client client)
+        {
+            string emptySpaceSymbol = " ";
+            string cursorMarkerSymbol = "<";
+            bool isActive = true;
+
+            Console.SetCursorPosition(40, 1);
+            WriteText(cursorMarkerSymbol);
+
+            while (isActive)
+            {
+                DisplayText(client.Basket);
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
+                    switch (key.Key)
+                    {
+                        case CommandMoveUp:
+                            _cursorMoveY = -1;
+                            break;
+
+                        case CommandMoveDown:
+                            _cursorMoveY = +1;
+                            break;
+
+                        case CommandEnterAdminMode:
+                            EnterAdminMode();
+                            break;
+
+                        case CommandEnter:
+                            client.TakeProduct(GiveProduct(_cursorPositionY - 1)); // Make update with function , to delete _cursorWayY
+                            _cursorMoveY = 0;
+                            break;
+
+                        case CommandOpenBusket:
+                            client.OpenBasket();
+                            break;
+
+                        case CommandExitAdminMode:
+                            ExitAdminMode();
+                            break;
+
+                        case CommandDelete:
+                            DeleteProduct(_cursorPositionY - 1);
+                            break;
+
+                        case CommandAddProduct:
+                            ReplenishAssortiment();
+                            break;
+
+                        case CommandTerminateProgram:
+                            isActive = TerminateProgram(isActive);
+                            break;
+                    }
+
+                    if (_cursorPositionY + _cursorMoveY != 0 && _cursorPositionY + _cursorMoveY < _assortment.Count + 1 && isActive == true)
+                    {
+                        Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
+                        Console.WriteLine(emptySpaceSymbol);
+
+                        _cursorPositionY += _cursorMoveY;
+
+                        Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
+                        Console.WriteLine(cursorMarkerSymbol);
+                    }
+                }
+            }
+        }
+
+        private bool TerminateProgram(bool isWork)
+        {
+            Console.Clear();
+            return !isWork;
+        }
+
+        private void ExitAdminMode()
+        {
+            if (_isAdmin == true)
+            {
+                _isAdmin = false;
+                Console.Clear();
+            }
+        }
+
+        private void EnterAdminMode()
+        {
+            Console.Clear();
+
+            string password = "Admin";
+            string userName = "Admin";
+            string usernameInput;
+            string passwordInput;
+
+            Console.Write("Enter the Username: ");
+            usernameInput = Console.ReadLine();
+            Console.Write("Enter the Password: ");
+            passwordInput = Console.ReadLine();
+
+            if (userName == usernameInput && password == passwordInput)
+            {
+                _isAdmin = true;
+            }
+            else
+            {
+                _isAdmin = false;
+            }
+
+            Console.Clear();
+        }
+
+        private void DeleteProduct(int index)
+        {
+            if (_isAdmin)
+            {
+
+                if (_assortment.Count > 0)
+                {
+                    _assortment.RemoveAt(index);
+                    Console.Clear();
+                    if (index > _assortment.Count - 1)
+                    {
+                        _cursorMoveY = -1;
+                    }
+                    else
+                    {
+                        _cursorMoveY = 0;
+                    }
+                }
+            }
+            else
+            {
+                Console.Clear();
+                WriteText("Admin mode is inactive", ConsoleColor.Red);
+                Thread.Sleep(_oneSecond);
+                Console.Clear();
+                _cursorMoveY = 0;
+            }
+        }
+
+        private void ReplenishAssortiment()
+        {
+            if (_isAdmin)
+            {
+                string productTitle;
+                string productPriceInput;
+                int productPrice;
+
+                Console.Clear();
+
+                WriteText("Enter title of product: ");
+                productTitle = Console.ReadLine();
+
+                WriteText("Write the price: ");
+                productPriceInput = Console.ReadLine();
+
+                if (int.TryParse(productPriceInput, out productPrice))
+                {
+                    _assortment.Add(new Product(productTitle, productPrice));
+                    WriteText("Operation Complete", ConsoleColor.Green);
+                    Thread.Sleep(_oneSecond);
+                    Console.Clear();
+                }
+                else
+                {
+                    Console.Clear();
+                    WriteText("Invalid Format", ConsoleColor.Red);
+                    Thread.Sleep(_oneSecond);
+                    Console.Clear();
+                }
+            }
+            else
+            {
+                Console.Clear();
+                WriteText("Admin mode is inactive", ConsoleColor.Red);
+                Thread.Sleep(_oneSecond);
+                Console.Clear();
+            }
+        }
+
+        private void WriteText(string text, ConsoleColor color = ConsoleColor.Black)
+        {
+            ConsoleColor defualtColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defualtColor;
+        }
+
+        private void AddProducts()
+        {
+            _assortment.Add(new Product("Apples", 2));
+            _assortment.Add(new Product("Bananas", 1));
+            _assortment.Add(new Product("Oranges", 2));
+            _assortment.Add(new Product("Grapes", 3));
+            _assortment.Add(new Product("Strawberries", 4));
+            _assortment.Add(new Product("Blueberries", 5));
+            _assortment.Add(new Product("Tomatoes", 2));
+            _assortment.Add(new Product("Cucumbers", 1));
+            _assortment.Add(new Product("Carrots", 2));
+            _assortment.Add(new Product("Onions", 1));
+            _assortment.Add(new Product("Potatoes", 2));
+            _assortment.Add(new Product("Lettuce", 3));
+            _assortment.Add(new Product("Bell peppers", 3));
+            _assortment.Add(new Product("Broccoli", 2));
+            _assortment.Add(new Product("Cauliflower", 3));
+        }
+
+        private void DisplayText(List<Product> list)
+        {
+            Console.SetCursorPosition(0, 1);
+
+            for (int i = 0; i < _assortment.Count; i++)
+            {
+                Console.WriteLine($"{_assortment[i].Title} / price : {_assortment[i].Price}$");
+            }
+
+            Console.SetCursorPosition(53, 0);
+            Console.WriteLine("Basket : " + list.Count);
+            Console.SetCursorPosition(0, _assortment.Count + 2);
+            WriteText($"To open busket press {CommandOpenBusket}", ConsoleColor.Blue);
+            Console.SetCursorPosition(50, _assortment.Count + 10);
+            Console.WriteLine($"Press {CommandTerminateProgram} to exit");
+
+            if (_isAdmin == true)
+            {
+                Console.SetCursorPosition(90, 0);
+                Console.Write("Admin mode : ");
+                WriteText(Convert.ToString(_isAdmin), ConsoleColor.Green);
+                Console.SetCursorPosition(80, 1);
+                WriteText($"To add Product press - /{CommandAddProduct}/", ConsoleColor.DarkMagenta);
+                Console.SetCursorPosition(80, 2);
+                WriteText($"To Delete Product press - /{CommandDelete}/", ConsoleColor.DarkMagenta);
+                Console.SetCursorPosition(80, 3);
+                WriteText($"To deactivate admin mode press - /{CommandExitAdminMode}/", ConsoleColor.DarkMagenta);
+            }
+            else
+            {
+                Console.SetCursorPosition(83, 1);
+                WriteText($" To activate Admin mode press - /{CommandEnterAdminMode}/", ConsoleColor.Blue);
+                Console.SetCursorPosition(90, 0);
+                Console.Write("Admin mode : ");
+                WriteText(Convert.ToString(_isAdmin), ConsoleColor.Red);
+            }
+        }
+
+        private Product GiveProduct(int index)
+        {
+            Product product = _assortment[index];
+            return product;
+        }
+    }
+
+    class Client
+    {
+        const ConsoleKey CommandEnter = ConsoleKey.Enter;
+        const ConsoleKey CommandExit = ConsoleKey.Escape;
+
+        public List<Product> Basket { get; private set; } = new List<Product>();
+
+        private int _cursorPositionY = 1;
+        private int _cursorPositionX = 40;
+        private int _cursorMoveY = 0;
+
+        public void TakeProduct(Product product)
+        {
+            Basket.Add(product);
+            Console.Clear();
+        }
+
+        public void OpenBasket()
+        {
+            const ConsoleKey CommandMoveUp = ConsoleKey.UpArrow;
+            const ConsoleKey CommandMoveDown = ConsoleKey.DownArrow;
+
+            string emptySpaceSymbol = " ";
+            string cursorMarkerSymbol = "<";
+            bool isActive = true;
+
+            Console.Clear();
+
+            Console.SetCursorPosition(40, 1);
+            Console.Write(cursorMarkerSymbol);
+
+            Console.SetCursorPosition(0, 1);
+
+            while (isActive)
+            {
+                Display();
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
+                    switch (key.Key)
+                    {
+                        case CommandMoveUp:
+                            _cursorMoveY = -1;
+                            break;
+
+                        case CommandMoveDown:
+                            _cursorMoveY = +1;
+                            break;
+
+                        case CommandEnter:
+                            Delete(_cursorPositionY - 1);
+                            break;
+
+                        case CommandExit:
+                            isActive = false;
+                            Console.Clear();
+                            break;
+                    }
+
+                    if (_cursorPositionY + _cursorMoveY != 0 && _cursorPositionY + _cursorMoveY < Basket.Count + 1 && isActive)
+                    {
+                        Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
+                        Console.WriteLine(emptySpaceSymbol);
+
+                        _cursorPositionY += _cursorMoveY;
+
+                        Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
+                        Console.WriteLine(cursorMarkerSymbol);
+                    }
+                }
+            }
+        }
+
+        private void Delete(int index)
+        {
+            if (Basket.Count > 0)
+            {
+                Basket.RemoveAt(index);
+                Console.Clear();
+                if (_cursorPositionY > Basket.Count)
+                {
+                    _cursorMoveY = -1;
+                }
+                else
+                {
+                    _cursorMoveY = 0;
+                }
+            }
+        }
+
+        private void Display()
+        {
+            int lineLenght = 40;
+            int totalPrice = 0;
+            char lineSymbol = '_';
+
+            Console.SetCursorPosition(0, 1);
+
+            for (int i = 0; i < Basket.Count; i++)
+            {
+                Console.WriteLine($"{Basket[i].Title} / price {Basket[i].Price}$ ");
+                totalPrice += Basket[i].Price;
+            }
+
+            Console.SetCursorPosition(0, Basket.Count + 1);
+
+            for (int i = 0; i < lineLenght; i++)
+            {
+                Console.Write(lineSymbol);
+            }
+
+            Console.SetCursorPosition(0, Basket.Count + 2);
+            Console.WriteLine($"Count : {Basket.Count}");
+            Console.WriteLine($"Total price : {totalPrice}$ ");
+            Console.SetCursorPosition(0, Basket.Count + 6);
+            Console.WriteLine($"Press {CommandEnter} to Delete product");
+            Console.SetCursorPosition(50, Basket.Count + 10);
+            Console.WriteLine($"Pres {CommandExit} to exit");
+        }
+    }
+
+    class Product
+    {
+        public Product(string title, int price)
+        {
+            Title = title;
+            Price = price;
+        }
+
+        public string Title { get; private set; }
+        public int Price { get; private set; }
+    }
+}
