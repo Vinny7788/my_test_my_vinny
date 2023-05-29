@@ -261,7 +261,15 @@ namespace School
 
             for (int i = 0; i < _assortment.Count; i++)
             {
-                Console.WriteLine($"{_assortment[i].Title} / price : {_assortment[i].Price}$");
+
+                if ((_cursorPositionY - 1) == i)
+                {
+                    WriteText($"{_assortment[i].Title} / price : {_assortment[i].Price}$", ConsoleColor.DarkGreen);
+                }
+                else
+                {
+                    Console.WriteLine($"{_assortment[i].Title} / price : {_assortment[i].Price}$");
+                }
             }
 
             Console.SetCursorPosition(53, 0);
@@ -392,6 +400,14 @@ namespace School
             }
         }
 
+        private void WriteText(string text, ConsoleColor color = ConsoleColor.Black)
+        {
+            ConsoleColor defualtColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defualtColor;
+        }
+
         private void Display()
         {
             int lineLenght = 40;
@@ -402,7 +418,16 @@ namespace School
 
             for (int i = 0; i < Basket.Count; i++)
             {
-                Console.WriteLine($"{Basket[i].Title} / price {Basket[i].Price}$ ");
+
+                if ((_cursorPositionY - 1) == i)
+                {
+                    WriteText($"{Basket[i].Title} / price {Basket[i].Price}$ ", ConsoleColor.DarkGreen);
+                }
+                else
+                {
+                    WriteText($"{Basket[i].Title} / price {Basket[i].Price}$ ");
+                }
+
                 totalPrice += Basket[i].Price;
             }
 
