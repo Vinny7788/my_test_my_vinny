@@ -143,12 +143,17 @@ namespace School
 
             public void CreateTraineRoute()
             {
+                const ConsoleKey UpArrow = ConsoleKey.UpArrow;
+                const ConsoleKey DownArow = ConsoleKey.DownArrow;
+                const ConsoleKey Enter = ConsoleKey.Enter;
+                const ConsoleKey Escape = ConsoleKey.Escape;
+
                 int maxNumberOfTrains = 12;
 
                 if (_activeTrains.Count != maxNumberOfTrains)
                 {
                     List<City> tempCityList = new List<City>();
-                    bool _createWayIsActive = true;
+                    bool createWayIsActive = true;
 
                     Console.Clear();
                     DrowInterface();
@@ -161,7 +166,7 @@ namespace School
                     Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
                     Console.WriteLine(_cursorMarkerSymbol);
 
-                    while (_createWayIsActive)
+                    while (createWayIsActive)
                     {
                         if (Console.KeyAvailable)
                         {
@@ -169,25 +174,25 @@ namespace School
 
                             switch (key.Key)
                             {
-                                case ConsoleKey.UpArrow:
+                                case UpArrow:
                                     _cursorMoveY = -1;
                                     break;
 
-                                case ConsoleKey.DownArrow:
+                                case DownArow:
                                     _cursorMoveY = +1;
                                     break;
 
-                                case ConsoleKey.Enter:
+                                case Enter:
                                     tempCityList.Add(_cities[_cursorPositionY - 2]);
                                     _cursorMoveY = 0;
                                     break;
 
-                                case ConsoleKey.Escape:
-                                    _createWayIsActive = Exit();
+                                case Escape:
+                                    createWayIsActive = Exit();
                                     break;
                             }
 
-                            MoveCursor(_createWayIsActive);
+                            MoveCursor(createWayIsActive);
 
                             if (tempCityList.Count == 2)
                             {
@@ -207,7 +212,7 @@ namespace School
 
                                 CreateWagon(peopleInWagon, tempCityList);
 
-                                _createWayIsActive = false;
+                                createWayIsActive = false;
                             }
                         }
                     }
@@ -252,7 +257,6 @@ namespace School
 
                     if (int.TryParse(userInput, out numbersOfWagons))
                     {
-
                         if ((numbersOfWagons * peopleInWagon) >= _soldTickets)
                         {
                             Console.SetCursorPosition(3, 9);
@@ -283,7 +287,6 @@ namespace School
                             ClearTextLine(3, 9, 60);
                             ClearTextLine(3, 7, 60);
                         }
-
                     }
                     else
                     {
@@ -297,11 +300,11 @@ namespace School
                 }
             }
 
-            private void ClearTextLine(int positionX, int positionY, int TextLenght)
+            private void ClearTextLine(int positionX, int positionY, int textLenght)
             {
                 Console.SetCursorPosition(positionX, positionY);
 
-                for (int i = 0; i < TextLenght; i++)
+                for (int i = 0; i < textLenght; i++)
                 {
                     Console.Write(" ");
                 }
