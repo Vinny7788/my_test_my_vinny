@@ -14,25 +14,24 @@ namespace School
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            Player player = new Player();
-            Program program = new Program();
-            Store store = new Store();
+            Player player = new Player(); ;
+            Seller seller = new Seller();
 
             bool isStoreActive = true;
 
             while (isStoreActive)
             {
-                Console.WriteLine($"Hello, Welcome!\n\nYour Balance: {player.Money}\n\n");
-                program.WriteMainText(CommandOpenBag, CommandOpenStore, CommandExit);
+                Console.WriteLine($"Hello, Welcome!\n\nYour Balance: {player.ShowBallance()} || Seller Balance: {seller.ShowBallance()}\n\n");
+                WriteMainText(CommandOpenBag, CommandOpenStore, CommandExit);
 
                 switch (Console.ReadLine())
                 {
                     case CommandOpenBag:
-                        player.OpenBag();
+                        PlayerBag(player);
                         break;
 
                     case CommandOpenStore:
-                        program.OperationWithStore(store, player);
+                        OperationWithSeller(seller, player);
                         break;
 
                     case CommandExit:
@@ -44,21 +43,19 @@ namespace School
             Console.Clear();
         }
 
-        private void OperationWithStore(Store store, Player player)
+        static void OperationWithSeller(Seller seller, Player player)
         {
-            store.OpenStore();
+            seller.OpenBag();
 
             Console.Write("Write the index of item you want to buy : ");
 
             if (int.TryParse(Console.ReadLine(), out int index))
             {
-                Item item = store.GiveItem(index);
-
-                if (item != null)
+                if (seller.TryGetItem(index, out Item item))
                 {
-                    if (item.Price <= player.Money)
+                    if (item.Price <= player.ShowBallance())
                     {
-                        store.SellItem(item);
+                        seller.SellItem(item);
                         player.BuyItem(item);
                     }
                     else
@@ -91,98 +88,63 @@ namespace School
             Console.Clear();
         }
 
-        private void WriteMainText(string CommandOpenBag, string CommandOpenStore, string CommandExit)
+        static void WriteMainText(string CommandOpenBag, string CommandOpenStore, string CommandExit)
         {
             Console.WriteLine($"To Open Bag press - {CommandOpenBag}\n\nTo Open Store press - {CommandOpenStore}\n\nTo Exit press - {CommandExit}");
         }
+
+        static void PlayerBag(Player player)
+        {
+            player.OpenBag();
+            Console.ReadLine();
+        }
     }
 
-    class Store
+    class Seller : Inventory
     {
-        private List<Item> _allItems = new List<Item>();
-
-        public Store()
+        public Seller()
         {
             AddItems();
         }
 
-        public void OpenStore()
-        {
-            Console.Clear();
-            Console.WriteLine("Choose a product! ");
-
-            for (int i = 0; i < _allItems.Count; i++)
-            {
-                Console.WriteLine($"| Index - {_allItems[i].Index} | Items Name - {_allItems[i].Name} | Price - {_allItems[i].Price}");
-            }
-        }
-
         public void SellItem(Item item)
         {
-            _allItems.Remove(item);
+            _money += item.Price;
+            _item.Remove(item);
         }
 
         public Item GiveItem(int index)
         {
-            Item item = _allItems.Find(i => i.Index == index);
+            Item item = _item.Find(i => i.Index == index);
             return item;
         }
 
         private void AddItems()
         {
-            _allItems.Add(new Item("Golden Bow", 100, 1));
-            _allItems.Add(new Item("Emerald Dagger", 50, 2));
-            _allItems.Add(new Item("Platinum Hammer", 75, 3));
-            _allItems.Add(new Item("Sapphire Staff", 200, 4));
-            _allItems.Add(new Item("Ruby Ring", 25, 5));
-            _allItems.Add(new Item("Amethyst Pickaxe", 120, 6));
-            _allItems.Add(new Item("Bronze Sword", 30, 7));
+            _item.Add(new Item("Golden Bow", 100, 1));
+            _item.Add(new Item("Emerald Dagger", 50, 2));
+            _item.Add(new Item("Platinum Hammer", 75, 3));
+            _item.Add(new Item("Sapphire Staff", 200, 4));
+            _item.Add(new Item("Ruby Ring", 25, 5));
+            _item.Add(new Item("Amethyst Pickaxe", 120, 6));
+            _item.Add(new Item("Bronze Sword", 30, 7));
+        }
+
+        public bool TryGetItem(int index, out Item item)
+        {
+            item = _item.Find(i => i.Index == index);
+            return item != null;
         }
     }
 
-    class Player
+    class Player : Inventory
     {
-        private List<Item> _bag = new List<Item>();
-
-        public int Money { get; private set; } = 300;
-
         public void BuyItem(Item item)
         {
             if (item != null)
             {
-                Money -= item.Price;
-                _bag.Add(item);
-            }
-        }
-
-        public void OpenBag()
-        {
-            int oneSecond = 1000;
-
-            if (_bag.Count != 0)
-            {
-                Console.Clear();
-                Console.WriteLine("Your inventory: \n");
-
-                Console.ForegroundColor = ConsoleColor.Green;
-
-                for (int i = 0; i < _bag.Count; i++)
-                {
-                    Console.WriteLine(_bag[i].Name + "\n");
-                }
-
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.ReadLine();
-                Console.Clear();
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Your bag is empty");
-                Console.ForegroundColor = ConsoleColor.White;
-
-                Thread.Sleep(oneSecond);
-                Console.Clear();
+                _money -= item.Price;
+                _item.Add(item);
             }
         }
     }
@@ -199,5 +161,32 @@ namespace School
         public string Name { get; private set; }
         public int Price { get; private set; }
         public int Index { get; private set; }
+    }
+
+    class Inventory
+    {
+        protected List<Item> _item = new List<Item>();
+
+        protected int _money = 500;
+
+        public int ShowBallance()
+        {
+            return _money;
+        }
+
+        public void OpenBag()
+        {
+            Console.Clear();
+            Console.WriteLine("Your inventory: \n");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            for (int i = 0; i < _item.Count; i++)
+            {
+                Console.WriteLine($"| Index - {_item[i].Index} | Items Name - {_item[i].Name} | Price - {_item[i].Price}");
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+        }
     }
 }
