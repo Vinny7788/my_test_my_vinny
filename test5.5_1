@@ -22,7 +22,7 @@ namespace School
 
             while (isStoreActive)
             {
-                Console.WriteLine($"Hello, Welcome!\n\nYour Balance: {player.TakeBallance()} || Seller Balance: {seller.TakeBallance()}\n\n");
+                Console.WriteLine($"Hello, Welcome!\n\nYour Balance: {player.GetBallance()} || Seller Balance: {seller.GetBallance()}\n\n");
                 shop.WriteMainText(CommandOpenBag, CommandOpenStore, CommandExit);
 
                 switch (Console.ReadLine())
@@ -39,8 +39,10 @@ namespace School
                         isStoreActive = false;
                         break;
                 }
+
                 Console.Clear();
             }
+
             Console.Clear();
         }
     }
@@ -95,7 +97,7 @@ namespace School
         public void OpenPlayerBag(Player player)
         {
             player.ShowBag();
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         public void WriteText(string Text, ConsoleColor color = ConsoleColor.White)
@@ -149,14 +151,7 @@ namespace School
     {
         public bool CanBuy(Item item)
         {
-            if (item.Price <= TakeBallance())
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return item.Price <= GetBallance() ? false : true;
         }
 
         public void BuyItem(Item item)
@@ -187,7 +182,7 @@ namespace School
 
         protected int Money = 100;
 
-        public int TakeBallance()
+        public int GetBallance()
         {
             return Money;
         }
