@@ -8,10 +8,6 @@ namespace School
     {
         static void Main(string[] args)
         {
-            const string CommandCreateTraineRoute = "1";
-            const string CommandDeleteTrain = "2";
-            const string CommandExit = "3";
-
             Console.SetWindowSize(150, 50);
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
@@ -20,10 +16,6 @@ namespace School
             Route route = new Route();
 
             bool isLoginPasswordCorect = false;
-            string login = "Admin";
-            string password = "Admin";
-            string passwordInput;
-            string loginInput;
             bool isActive = true;
 
             while (isActive)
@@ -32,374 +24,392 @@ namespace School
 
                 while (isLoginPasswordCorect == false)
                 {
-                    Console.Clear();
-
-                    Console.SetCursorPosition(43, 15);
-                    Console.WriteLine("Login : ");
-
-                    Console.SetCursorPosition(40, 17);
-                    Console.WriteLine("Password : ");
-
-                    Console.SetCursorPosition(50, 15);
-                    loginInput = Console.ReadLine();
-
-                    Console.SetCursorPosition(50, 17);
-                    passwordInput = Console.ReadLine();
-
-                    if (loginInput == login && passwordInput == password)
-                    {
-                        Console.Clear();
-                        isLoginPasswordCorect = true;
-                    }
+                    ChekAdmin(ref isLoginPasswordCorect);
                 }
 
                 route.DrowInterface();
 
-                switch (route.WriteCommandMenu(CommandCreateTraineRoute, CommandDeleteTrain, CommandExit))
-                {
-                    case CommandCreateTraineRoute:
-                        route.CreateTraineRoute();
-                        break;
-
-                    case CommandDeleteTrain:
-                        route.DeleteTrain();
-                        break;
-
-                    case CommandExit:
-                        isLoginPasswordCorect = false;
-                        Console.Clear();
-                        break;
-                }
+                route.WorkWithMenu(ref isLoginPasswordCorect);
             }
         }
 
-        class Route
+        static void ChekAdmin(ref bool isLoginPasswordCorect)
         {
-            private List<City> _cities = new List<City>();
-            private Queue<Train> _activeTrains = new Queue<Train>();
+            string login = "Admin";
+            string password = "Admin";
+            string passwordInput;
+            string loginInput;
 
-            public Route()
+            Console.Clear();
+
+            Console.SetCursorPosition(43, 15);
+            Console.WriteLine("Login : ");
+
+            Console.SetCursorPosition(40, 17);
+            Console.WriteLine("Password : ");
+
+            Console.SetCursorPosition(50, 15);
+            loginInput = Console.ReadLine();
+
+            Console.SetCursorPosition(50, 17);
+            passwordInput = Console.ReadLine();
+
+            if (loginInput == login && passwordInput == password)
             {
-                AddCitys();
+                Console.Clear();
+                isLoginPasswordCorect = true;
             }
+        }
+    }
 
-            private string _cursorMarkerSymbol = "<";
-            private int _cursorPositionY = 2;
-            private int _cursorPositionX = 20;
-            private int _cursorMoveY = 0;
-            private string _mapName = "RouteProgram";
-            private int _soldTickets;
+    class Route
+    {
+        private List<City> _cities = new List<City>();
+        private Queue<Train> _activeTrains = new Queue<Train>();
 
-            public string WriteCommandMenu(string CommandCreateTraineRoute, string CommandOpenSalesHistory, string CommandExit)
+        public Route()
+        {
+            AddCitys();
+        }
+
+        private string _cursorMarkerSymbol = "<";
+        private int _cursorPositionY = 2;
+        private int _cursorPositionX = 20;
+        private int _cursorMoveY = 0;
+        private string _mapName = "RouteProgram";
+        private int _soldTickets;
+
+        public string WriteCommandMenu(string CommandCreateTraineRoute, string CommandOpenSalesHistory, string CommandExit)
+        {
+            string userInput;
+
+            Console.SetCursorPosition(3, 3);
+            WriteText($"To create a new route press --- {CommandCreateTraineRoute} ", ConsoleColor.DarkYellow);
+
+            Console.SetCursorPosition(3, 4);
+            WriteText($"To delete train --- {CommandOpenSalesHistory} ", ConsoleColor.DarkYellow);
+
+            Console.SetCursorPosition(3, 5);
+            WriteText($"To exit press --- {CommandExit} ", ConsoleColor.DarkYellow);
+
+            Console.SetCursorPosition(3, 8);
+            Console.Write("Command ---- ");
+
+            return userInput = Console.ReadLine();
+        }
+
+        public void WorkWithMenu(ref bool isLoginPasswordCorect)
+        {
+            const string CommandCreateTraineRoute = "1";
+            const string CommandDeleteTrain = "2";
+            const string CommandExit = "3";
+
+            switch (WriteCommandMenu(CommandCreateTraineRoute, CommandDeleteTrain, CommandExit))
             {
-                string userInput;
+                case CommandCreateTraineRoute:
+                    CreateTraineRoute();
+                    break;
 
-                Console.SetCursorPosition(3, 3);
-                WriteText($"To create a new route press --- {CommandCreateTraineRoute} ", ConsoleColor.DarkYellow);
+                case CommandDeleteTrain:
+                    DeleteTrain();
+                    break;
 
-                Console.SetCursorPosition(3, 4);
-                WriteText($"To delete train --- {CommandOpenSalesHistory} ", ConsoleColor.DarkYellow);
-
-                Console.SetCursorPosition(3, 5);
-                WriteText($"To exit press --- {CommandExit} ", ConsoleColor.DarkYellow);
-
-                Console.SetCursorPosition(3, 8);
-                Console.Write("Command ---- ");
-
-                return userInput = Console.ReadLine();
-            }
-
-            public void DeleteTrain()
-            {
-                if (_activeTrains.Count > 0)
-                {
-                    _activeTrains.Dequeue();
-                }
-            }
-
-            public void DrowInterface()
-            {
-                string[] map = System.IO.File.ReadAllLines($"Maps/{_mapName}.txt");
-
-                int activeRoutesTextPositionX = 100;
-                int activeRoutesTextPositionY = 2;
-                int lineCounter = 4;
-
-                for (int i = 0; i < map.Length; i++)
-                {
-                    Console.WriteLine(map[i]);
-                }
-
-                Console.SetCursorPosition(activeRoutesTextPositionX, activeRoutesTextPositionY);
-                WriteText("Active Routes", ConsoleColor.DarkGreen);
-
-                foreach (Train train in _activeTrains)
-                {
-                    Console.SetCursorPosition(71, lineCounter);
-                    WriteText($"#{train.TrainNumber}//{train.DeparturePoint}==>{train.DestinationPoint}//{train.WagonCount}");
-                    lineCounter++;
-                }
-            }
-
-            public void CreateTraineRoute()
-            {
-                const ConsoleKey UpArrow = ConsoleKey.UpArrow;
-                const ConsoleKey DownArow = ConsoleKey.DownArrow;
-                const ConsoleKey Enter = ConsoleKey.Enter;
-                const ConsoleKey Escape = ConsoleKey.Escape;
-
-                int maxNumberOfTrains = 12;
-
-                if (_activeTrains.Count != maxNumberOfTrains)
-                {
-                    List<City> tempCityList = new List<City>();
-                    bool createWayIsActive = true;
-
+                case CommandExit:
+                    isLoginPasswordCorect = false;
                     Console.Clear();
-                    DrowInterface();
+                    break;
+            }
+        }
 
-                    Console.CursorVisible = false;
-                    Console.SetCursorPosition(0, 0);
+        public void DeleteTrain()
+        {
+            if (_activeTrains.Count > 0)
+            {
+                _activeTrains.Dequeue();
+            }
+        }
 
-                    RenderCities();
+        public void DrowInterface()
+        {
+            string[] map = System.IO.File.ReadAllLines($"Maps/{_mapName}.txt");
 
-                    Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
-                    Console.WriteLine(_cursorMarkerSymbol);
+            int activeTextPositionX = 100;
+            int activeTextPositionY = 2;
+            int lineCounter = 4;
 
-                    while (createWayIsActive)
+            for (int i = 0; i < map.Length; i++)
+            {
+                Console.WriteLine(map[i]);
+            }
+
+            Console.SetCursorPosition(activeTextPositionX, activeTextPositionY);
+            WriteText("Active Routes", ConsoleColor.DarkGreen);
+
+            foreach (Train train in _activeTrains)
+            {
+                Console.SetCursorPosition(71, lineCounter);
+                WriteText($"#{train.Number}//{train.DeparturePoint}==>{train.DestinationPoint}//{train.WagonCount}");
+                lineCounter++;
+            }
+        }
+
+        public void CreateTraineRoute()
+        {
+            const ConsoleKey UpArrow = ConsoleKey.UpArrow;
+            const ConsoleKey DownArow = ConsoleKey.DownArrow;
+            const ConsoleKey Enter = ConsoleKey.Enter;
+            const ConsoleKey Escape = ConsoleKey.Escape;
+
+            int maxNumberOfTrains = 12;
+
+            if (_activeTrains.Count != maxNumberOfTrains)
+            {
+                List<City> tempCityList = new List<City>();
+                bool createWayIsActive = true;
+
+                Console.Clear();
+                DrowInterface();
+
+                Console.CursorVisible = false;
+                Console.SetCursorPosition(0, 0);
+
+                RenderCities();
+
+                Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
+                Console.WriteLine(_cursorMarkerSymbol);
+
+                while (createWayIsActive)
+                {
+                    if (Console.KeyAvailable)
                     {
-                        if (Console.KeyAvailable)
+                        ConsoleKeyInfo key = Console.ReadKey(true);
+
+                        switch (key.Key)
                         {
-                            ConsoleKeyInfo key = Console.ReadKey(true);
+                            case UpArrow:
+                                _cursorMoveY = -1;
+                                break;
 
-                            switch (key.Key)
-                            {
-                                case UpArrow:
-                                    _cursorMoveY = -1;
-                                    break;
+                            case DownArow:
+                                _cursorMoveY = +1;
+                                break;
 
-                                case DownArow:
-                                    _cursorMoveY = +1;
-                                    break;
+                            case Enter:
+                                tempCityList.Add(_cities[_cursorPositionY - 2]);
+                                _cursorMoveY = 0;
+                                break;
 
-                                case Enter:
-                                    tempCityList.Add(_cities[_cursorPositionY - 2]);
-                                    _cursorMoveY = 0;
-                                    break;
-
-                                case Escape:
-                                    createWayIsActive = Exit();
-                                    break;
-                            }
-
-                            MoveCursor(createWayIsActive);
-
-                            if (tempCityList.Count == 2)
-                            {
-                                int peopleInWagon = 45;
-
-                                Console.Clear();
-
-                                DrowInterface();
-
-                                Console.SetCursorPosition(3, 4);
-                                Console.WriteLine($"{tempCityList[0].Name} /// {tempCityList[1].Name}"); ;
-
-                                SalesTicket();
-
-                                Console.SetCursorPosition(3, 6);
-                                Console.WriteLine($"The wagon can accommodate {peopleInWagon} people");
-
-                                CreateWagon(peopleInWagon, tempCityList);
-
+                            case Escape:
                                 createWayIsActive = false;
-                            }
+                                break;
+                        }
+
+                        MoveCursor(createWayIsActive);
+
+                        if (tempCityList.Count == 2)
+                        {
+                            TrainSetting(tempCityList, ref createWayIsActive);
                         }
                     }
                 }
-                else
-                {
-                    Console.SetCursorPosition(3, 9);
-                    WriteText("Too many active trains.", ConsoleColor.Red);
-
-                    Thread.Sleep(1000);
-                    ClearTextLine(3, 9, 60);
-                    ClearTextLine(3, 7, 60);
-                }
             }
-
-            private void RenderCities()
+            else
             {
-                int lineCounter = 2;
+                Console.SetCursorPosition(3, 9);
+                WriteText("Too many active trains.", ConsoleColor.Red);
 
-                for (int i = 0; i < _cities.Count; i++)
-                {
-                    Console.SetCursorPosition(3, lineCounter);
-                    Console.WriteLine(_cities[i].Name);
-                    lineCounter++;
-                }
+                Thread.Sleep(1000);
+                ClearTextLine(3, 9, 60);
+                ClearTextLine(3, 7, 60);
             }
+        }
 
-            private void CreateWagon(int peopleInWagon, List<City> tempCityList)
+        private void TrainSetting(List<City> tempCityList, ref bool createWayIsActive)
+        {
+            int peopleInWagon = 45;
+
+            Console.Clear();
+
+            DrowInterface();
+
+            Console.SetCursorPosition(3, 4);
+            Console.WriteLine($"{tempCityList[0].Name} /// {tempCityList[1].Name}"); ;
+
+            SalesTicket();
+
+            Console.SetCursorPosition(3, 6);
+            Console.WriteLine($"The wagon can accommodate {peopleInWagon} people");
+
+            CreateWagon(peopleInWagon, tempCityList);
+
+            createWayIsActive = false;
+        }
+
+        private void RenderCities()
+        {
+            int lineCounter = 2;
+
+            for (int i = 0; i < _cities.Count; i++)
             {
-                bool isEnoughtSpace = false;
-                string userInput;
-                int numbersOfWagons;
+                Console.SetCursorPosition(3, lineCounter);
+                Console.WriteLine(_cities[i].Name);
+                lineCounter++;
+            }
+        }
 
-                while (isEnoughtSpace == false)
+        private void CreateWagon(int peopleInWagon, List<City> tempCityList)
+        {
+            bool isEnoughtSpace = false;
+            string userInput;
+            int numbersOfWagons;
+
+            while (isEnoughtSpace == false)
+            {
+                ClearTextLine(3, 7, 45);
+
+                Console.SetCursorPosition(3, 7);
+                Console.Write("Enter the number of wagons: ");
+
+                userInput = Console.ReadLine();
+
+                if (int.TryParse(userInput, out numbersOfWagons))
                 {
-                    ClearTextLine(3, 7, 45);
-
-                    Console.SetCursorPosition(3, 7);
-                    Console.Write("Enter the number of wagons: ");
-
-                    userInput = Console.ReadLine();
-
-                    if (int.TryParse(userInput, out numbersOfWagons))
+                    if ((numbersOfWagons * peopleInWagon) >= _soldTickets)
                     {
-                        if ((numbersOfWagons * peopleInWagon) >= _soldTickets)
-                        {
-                            Console.SetCursorPosition(3, 9);
-                            WriteText("Enter the Train Number: ", ConsoleColor.DarkYellow);
-                            Console.SetCursorPosition(27, 9);
+                        Console.SetCursorPosition(3, 9);
+                        WriteText("Enter the Train Number: ", ConsoleColor.DarkYellow);
+                        Console.SetCursorPosition(27, 9);
 
-                            _activeTrains.Enqueue(new Train(Console.ReadLine().ToUpper(), tempCityList[0].Name, tempCityList[1].Name, numbersOfWagons));
+                        _activeTrains.Enqueue(new Train(Console.ReadLine().ToUpper(), tempCityList[0].Name, tempCityList[1].Name, numbersOfWagons));
 
-                            ClearTextLine(3, 4, 60);
-                            ClearTextLine(3, 5, 60);
-                            ClearTextLine(3, 6, 60);
-                            ClearTextLine(3, 7, 60);
-                            ClearTextLine(3, 9, 60);
+                        ClearTextLine(3, 4, 60);
+                        ClearTextLine(3, 5, 60);
+                        ClearTextLine(3, 6, 60);
+                        ClearTextLine(3, 7, 60);
+                        ClearTextLine(3, 9, 60);
 
-                            Console.SetCursorPosition(3, 9);
-                            WriteText("The train is ready!", ConsoleColor.DarkGreen);
+                        Console.SetCursorPosition(3, 9);
+                        WriteText("The train is ready!", ConsoleColor.DarkGreen);
 
-                            Thread.Sleep(1000);
+                        Thread.Sleep(1000);
 
-                            isEnoughtSpace = true;
-                        }
-                        else
-                        {
-                            Console.SetCursorPosition(3, 9);
-                            Console.WriteLine("Not Enought Space");
-
-                            Thread.Sleep(1000);
-                            ClearTextLine(3, 9, 60);
-                            ClearTextLine(3, 7, 60);
-                        }
+                        isEnoughtSpace = true;
                     }
                     else
                     {
                         Console.SetCursorPosition(3, 9);
-                        WriteText("Invalid Format", ConsoleColor.Red);
+                        Console.WriteLine("Not Enought Space");
 
                         Thread.Sleep(1000);
                         ClearTextLine(3, 9, 60);
                         ClearTextLine(3, 7, 60);
                     }
                 }
-            }
-
-            private void ClearTextLine(int positionX, int positionY, int textLenght)
-            {
-                Console.SetCursorPosition(positionX, positionY);
-
-                for (int i = 0; i < textLenght; i++)
+                else
                 {
-                    Console.Write(" ");
+                    Console.SetCursorPosition(3, 9);
+                    WriteText("Invalid Format", ConsoleColor.Red);
+
+                    Thread.Sleep(1000);
+                    ClearTextLine(3, 9, 60);
+                    ClearTextLine(3, 7, 60);
                 }
-            }
-
-            private bool Exit()
-            {
-                Console.Clear();
-                return false;
-            }
-
-            private void SalesTicket()
-            {
-                Random random = new Random();
-                int minSalesNumber = 50;
-                int maxSelesNumber = 400;
-
-                _soldTickets = random.Next(minSalesNumber, maxSelesNumber);
-
-                for (int i = 0; i < _soldTickets; i++)
-                {
-                    Console.SetCursorPosition(3, 5);
-                    Console.WriteLine($"Tickets alredy sold --- {i}");
-                    Thread.Sleep(25);
-                }
-            }
-
-            private void MoveCursor(bool _createWayIsActive)
-            {
-                if (_createWayIsActive)
-                {
-                    ClearTextLine(_cursorPositionX, _cursorPositionY, _cursorMarkerSymbol.Length);
-                    _cursorPositionY += _cursorMoveY;
-
-                    if (_cursorPositionY > _cities.Count + 1)
-                    {
-                        _cursorPositionY = 2;
-                    }
-
-                    if (_cursorPositionY < 2)
-                    {
-                        _cursorPositionY = _cities.Count + 1;
-                    }
-
-                    Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
-                    Console.WriteLine(_cursorMarkerSymbol);
-                }
-            }
-
-            private void WriteText(string text, ConsoleColor color = ConsoleColor.Black)
-            {
-                Console.ForegroundColor = color;
-                Console.WriteLine(text);
-                Console.ForegroundColor = ConsoleColor.Black;
-            }
-
-            private void AddCitys()
-            {
-                _cities.Add(new City("Moscow"));
-                _cities.Add(new City("Saint Petersburg"));
-                _cities.Add(new City("Novosibirsk"));
-                _cities.Add(new City("Yekaterenburg"));
-                _cities.Add(new City("Nizhny Novgorod"));
-                _cities.Add(new City("Kazan"));
-                _cities.Add(new City("Chelyabinsk"));
-                _cities.Add(new City("Omsk"));
-                _cities.Add(new City("Samara"));
-                _cities.Add(new City("Rostov-on-Don"));
             }
         }
 
-        class City
+        private void ClearTextLine(int positionX, int positionY, int textLenght)
         {
-            public City(string name)
-            {
-                Name = name;
-            }
+            Console.SetCursorPosition(positionX, positionY);
 
-            public string Name { get; private set; }
+            for (int i = 0; i < textLenght; i++)
+            {
+                Console.Write(" ");
+            }
         }
 
-        class Train
+        private void SalesTicket()
         {
-            public Train(string trainNumber, string destinationPoint, string departurePoint, int wagonCount)
-            {
-                TrainNumber = trainNumber;
-                DestinationPoint = destinationPoint;
-                DeparturePoint = departurePoint;
-                WagonCount = wagonCount;
-            }
+            Random random = new Random();
+            int minSalesNumber = 50;
+            int maxSelesNumber = 400;
 
-            public string TrainNumber { get; private set; }
-            public string DestinationPoint { get; private set; }
-            public string DeparturePoint { get; private set; }
-            public int WagonCount { get; private set; }
+            _soldTickets = random.Next(minSalesNumber, maxSelesNumber);
+
+            for (int i = 0; i < _soldTickets; i++)
+            {
+                Console.SetCursorPosition(3, 5);
+                Console.WriteLine($"Tickets alredy sold --- {i}");
+                Thread.Sleep(25);
+            }
         }
+
+        private void MoveCursor(bool _createWayIsActive)
+        {
+            if (_createWayIsActive)
+            {
+                ClearTextLine(_cursorPositionX, _cursorPositionY, _cursorMarkerSymbol.Length);
+                _cursorPositionY += _cursorMoveY;
+
+                if (_cursorPositionY > _cities.Count + 1)
+                {
+                    _cursorPositionY = 2;
+                }
+
+                if (_cursorPositionY < 2)
+                {
+                    _cursorPositionY = _cities.Count + 1;
+                }
+
+                Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
+                Console.WriteLine(_cursorMarkerSymbol);
+            }
+        }
+
+        private void WriteText(string text, ConsoleColor color = ConsoleColor.Black)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = ConsoleColor.Black;
+        }
+
+        private void AddCitys()
+        {
+            _cities.Add(new City("Moscow"));
+            _cities.Add(new City("Saint Petersburg"));
+            _cities.Add(new City("Novosibirsk"));
+            _cities.Add(new City("Yekaterenburg"));
+            _cities.Add(new City("Nizhny Novgorod"));
+            _cities.Add(new City("Kazan"));
+            _cities.Add(new City("Chelyabinsk"));
+            _cities.Add(new City("Omsk"));
+            _cities.Add(new City("Samara"));
+            _cities.Add(new City("Rostov-on-Don"));
+        }
+    }
+
+    class City
+    {
+        public City(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; private set; }
+    }
+
+    class Train
+    {
+        public Train(string number, string destinationPoint, string departurePoint, int wagonCount)
+        {
+            Number = number;
+            DestinationPoint = destinationPoint;
+            DeparturePoint = departurePoint;
+            WagonCount = wagonCount;
+        }
+
+        public string Number { get; private set; }
+        public string DestinationPoint { get; private set; }
+        public string DeparturePoint { get; private set; }
+        public int WagonCount { get; private set; }
     }
 }
